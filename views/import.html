@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" data-page="import">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Импорт заданий</title>
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+    <header>
+        Импорт заданий
+    </header>
+    <div class="container">
+        <h2>Импортировать задания из XML</h2>
+        <form id="import-form" enctype="multipart/form-data">
+            <input type="file" id="xml-file" accept=".xml">
+            <button class="main-button" type="submit">
+                <span class="material-icons">file_upload</span> Импортировать
+            </button>
+        </form>
+        <br>
+        <a href="tasks.html" class="back-link">
+            <span class="material-icons">arrow_back</span> Назад к заданиям
+        </a>
+    </div>
+    <script src="../js/import.js"></script>
+</body>
+</html>

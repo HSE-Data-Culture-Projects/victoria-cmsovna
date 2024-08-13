@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" data-page="index">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Главная страница CMS</title>
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+    <header>
+        Управление контентом
+    </header>
+    <div class="container">
+        <h2>Выберите действие</h2>
+        <div class="button-container">
+            <button class="main-button" onclick="navigateTo('exams')">
+                <span class="material-icons">assignment</span> Управление экзаменами
+            </button>
+            <button class="main-button" onclick="navigateTo('topics')">
+                <span class="material-icons">topic</span> Управление темами
+            </button>
+            <button class="main-button" onclick="navigateTo('tasks')">
+                <span class="material-icons">assignment_turned_in</span> Управление заданиями
+            </button>
+        </div>
+    </div>
+    <script src="../js/main.js"></script>
+</body>
+</html>

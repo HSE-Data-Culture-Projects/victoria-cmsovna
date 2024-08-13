@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" data-page="tasks">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Управление заданиями</title>
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+    <header>
+        Управление заданиями
+    </header>
+    <div class="container">
+        <h2>Задания</h2>
+        <ul id="task-list">
+            <!-- Список заданий будет динамически загружен сюда -->
+        </ul>
+        <button class="add-button" onclick="addTask()">
+            <span class="material-icons">add</span> Добавить задание
+        </button>
+        <button class="import-button" onclick="document.getElementById('importModal').style.display='block'">
+            <span class="material-icons">file_upload</span> Импортировать XML
+        </button>
+        <br>
+        <a href="topics.html" class="back-link">
+            <span class="material-icons">arrow_back</span> Назад к темам
+        </a>
+    </div>
+
+    <!-- Модальное окно для импорта XML -->
+    <div id="importModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="document.getElementById('importModal').style.display='none'">&times;</span>
+            <h2>Импортировать задания из XML</h2>
+            <form id="import-form" enctype="multipart/form-data">
+                <input type="file" id="xml-file" accept=".xml">
+                <button class="main-button" type="submit">
+                    <span class="material-icons">file_upload</span> Импортировать
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script src="../js/main.js"></script>
+    <script src="../js/task.js"></script>
+    <script src="../js/import.js"></script>
+</body>
+</html>
