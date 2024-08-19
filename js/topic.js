@@ -1,5 +1,26 @@
 // topic.js - Логика для работы с темами
 
+async function loadExamsForTopics() {
+    try {
+        const response = await fetch('http://localhost:3000/api/exams');
+        if (response.ok) {
+            const exams = await response.json();
+            const examSelect = document.getElementById('exam-ids');
+            examSelect.innerHTML = '';
+            exams.forEach(exam => {
+                const option = document.createElement('option');
+                option.value = exam.id;
+                option.textContent = exam.name;
+                examSelect.appendChild(option);
+            });
+        } else {
+            console.error('Ошибка при загрузке экзаменов');
+        }
+    } catch (error) {
+        console.error('Ошибка при загрузке экзаменов:', error);
+    }
+}
+
 async function loadTopics() {
     const urlParams = new URLSearchParams(window.location.search);
     const examId = urlParams.get('examId');
@@ -42,53 +63,80 @@ async function loadTopics() {
     }
 }
 
-async function addTopic() {
-    const topicName = prompt('Введите название темы:');
-    const examIdsInput = prompt('Введите идентификаторы экзаменов через запятую:');
+document.getElementById('topic-form').addEventListener('submit', async function (event) {
+    event.preventDefault();
+    const topicName = document.getElementById('topic-name').value;
+    const examIdsInput = document.getElementById('exam-ids').value;
     const examIds = examIdsInput.split(',').map(id => id.trim());
+    const topicId = document.getElementById('topic-id').value;
 
-    if (topicName && examIds.length > 0) {
-        try {
-            const response = await fetch('http://localhost:3000/api/topics', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ name: topicName, examIds: examIds })
-            });
+    if (topicId) {
+        await updateTopic(topicId, topicName, examIds);
+    } else {
+        await addTopic(topicName, examIds);
+    }
+    hideTopicForm();
+});
 
-            if (response.ok) {
-                loadTopics();
-            } else {
-                console.error('Ошибка при добавлении темы');
-            }
-        } catch (error) {
-            console.error('Ошибка при добавлении темы:', error);
+function showTopicForm(topicId = '', topicName = '', examIds = '') {
+    document.getElementById('topic-name').value = topicName;
+    document.getElementById('exam-ids').value = examIds;
+    document.getElementById('topic-id').value = topicId;
+    document.getElementById('topic-form-container').style.display = 'block';
+}
+
+function hideTopicForm() {
+    document.getElementById('topic-form-container').style.display = 'none';
+}
+
+function cancelTopicForm() {
+    hideTopicForm();
+}
+
+async function addTopic(topicName, examIds) {
+    try {
+        const response = await fetch('http://localhost:3000/api/topics', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ name: topicName, examIds: examIds })
+        });
+
+        if (response.ok) {
+            loadTopics();
+        } else {
+            console.error('Ошибка при добавлении темы');
         }
+    } catch (error) {
+        console.error('Ошибка при добавлении темы:', error);
     }
 }
 
-async function updateTopic(id) {
-    const topicName = prompt('Введите новое название темы:');
-    if (topicName) {
-        try {
-            const response = await fetch(`http://localhost:3000/api/topics/${id}`, {
-                method: 'PATCH',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ name: topicName })
-            });
+async function updateTopic(id, topicName, examIds) {
+    try {
+        const response = await fetch(`http://localhost:3000/api/topics/${id}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ name: topicName, examIds: examIds })
+        });
 
-            if (response.ok) {
-                loadTopics();
-            } else {
-                console.error('Ошибка при обновлении темы');
-            }
-        } catch (error) {
-            console.error('Ошибка при обновлении темы:', error);
+        if (response.ok) {
+            loadTopics();
+        } else {
+            console.error('Ошибка при обновлении темы');
         }
+    } catch (error) {
+        console.error('Ошибка при обновлении темы:', error);
     }
 }
+
+// Пример вызова showTopicForm для добавления темы
+document.querySelector('.add-button').addEventListener('click', function () {
+    loadExamsForTopics();
+    showTopicForm();
+});
 
 document.addEventListener('DOMContentLoaded', loadTopics);

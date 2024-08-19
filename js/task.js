@@ -87,4 +87,60 @@ async function updateTask(id) {
     }
 }
 
+document.getElementById('task-form').addEventListener('submit', async function(event) {
+    event.preventDefault();
+    const taskContent = document.getElementById('task-content').value;
+    const topicIds = Array.from(document.getElementById('topic-ids').selectedOptions).map(option => option.value);
+    const taskId = document.getElementById('task-id').value;
+
+    if (taskId) {
+        await updateTask(taskId, taskContent, topicIds);
+    } else {
+        await addTask(taskContent, topicIds);
+    }
+    hideTaskForm();
+});
+
+function showTaskForm(taskId = '', taskContent = '', topicIds = []) {
+    document.getElementById('task-content').value = taskContent;
+    const topicSelect = document.getElementById('topic-ids');
+    topicSelect.value = topicIds;
+    document.getElementById('task-id').value = taskId;
+    document.getElementById('task-form-container').style.display = 'block';
+}
+
+function hideTaskForm() {
+    document.getElementById('task-form-container').style.display = 'none';
+}
+
+function cancelTaskForm() {
+    hideTaskForm();
+}
+
+async function loadTopicsForTasks() {
+    try {
+        const response = await fetch('http://localhost:3000/api/topics');
+        if (response.ok) {
+            const topics = await response.json();
+            const topicSelect = document.getElementById('topic-ids');
+            topicSelect.innerHTML = ''; // Очистка текущих опций
+            topics.forEach(topic => {
+                const option = document.createElement('option');
+                option.value = topic.id;
+                option.textContent = topic.name;
+                topicSelect.appendChild(option);
+            });
+        } else {
+            console.error('Ошибка при загрузке тем');
+        }
+    } catch (error) {
+        console.error('Ошибка при загрузке тем:', error);
+    }
+}
+
+// Вызов функции для загрузки тем при открытии формы
+document.querySelector('.add-button').addEventListener('click', function() {
+    loadTopics();
+    showTaskForm();
+});
 document.addEventListener('DOMContentLoaded', loadTasks);

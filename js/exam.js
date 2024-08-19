@@ -35,50 +35,76 @@ async function loadExams() {
     }
 }
 
-async function addExam() {
-    const examName = prompt('Введите название экзамена:');
-    if (examName) {
-        try {
-            const response = await fetch('http://localhost:3000/api/exams', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ name: examName })
-            });
+document.getElementById('exam-form').addEventListener('submit', async function (event) {
+    event.preventDefault();
+    const examName = document.getElementById('exam-name').value;
+    const examId = document.getElementById('exam-id').value;
 
-            if (response.ok) {
-                loadExams();
-            } else {
-                console.error('Ошибка при добавлении экзамена');
-            }
-        } catch (error) {
-            console.error('Ошибка при добавлении экзамена:', error);
+    if (examId && examName) {
+        await updateExam(examId, examName);
+    } else if (examName) {
+        await addExam(examName);
+    }
+    hideForm();
+});
+
+function showForm(examId = '', examName = '') {
+    document.getElementById('exam-name').value = examName;
+    document.getElementById('exam-id').value = examId;
+    document.getElementById('exam-form-container').style.display = 'block';
+}
+
+function hideForm() {
+    document.getElementById('exam-form-container').style.display = 'none';
+}
+
+function cancelForm() {
+    hideForm();
+}
+
+async function addExam(examName) {
+    try {
+        const response = await fetch('http://localhost:3000/api/exams', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ name: examName })
+        });
+
+        if (response.ok) {
+            loadExams();
+        } else {
+            console.error('Ошибка при добавлении экзамена');
         }
+    } catch (error) {
+        console.error('Ошибка при добавлении экзамена:', error);
     }
 }
 
-async function updateExam(id) {
-    const examName = prompt('Введите новое название экзамена:');
-    if (examName) {
-        try {
-            const response = await fetch(`http://localhost:3000/api/exams/${id}`, {
-                method: 'PATCH',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ name: examName })
-            });
+async function updateExam(id, examName) {
+    try {
+        const response = await fetch(`http://localhost:3000/api/exams/${id}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ name: examName })
+        });
 
-            if (response.ok) {
-                loadExams();
-            } else {
-                console.error('Ошибка при обновлении экзамена');
-            }
-        } catch (error) {
-            console.error('Ошибка при обновлении экзамена:', error);
+        if (response.ok) {
+            loadExams();
+        } else {
+            console.error('Ошибка при обновлении экзамена');
         }
+    } catch (error) {
+        console.error('Ошибка при обновлении экзамена:', error);
     }
 }
+
+// Пример вызова showForm для добавления экзамена
+document.querySelector('.add-button').addEventListener('click', function () {
+    showForm();
+});
 
 document.addEventListener('DOMContentLoaded', loadExams);

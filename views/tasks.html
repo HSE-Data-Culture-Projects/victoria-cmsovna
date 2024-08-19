@@ -15,7 +15,7 @@
         <ul id="task-list">
             <!-- Список заданий будет динамически загружен сюда -->
         </ul>
-        <button class="add-button" onclick="addTask()">
+        <button class="add-button" onclick="showTaskForm()">
             <span class="material-icons">add</span> Добавить задание
         </button>
         <button class="import-button" onclick="document.getElementById('importModal').style.display='block'">
@@ -25,6 +25,22 @@
         <a href="topics.html" class="back-link">
             <span class="material-icons">arrow_back</span> Назад к темам
         </a>
+
+        <div class="form-container" id="task-form-container" style="display: none;">
+            <form id="task-form">
+                <label for="task-content">Содержимое задания (XML):</label>
+                <textarea id="task-content" name="task-content" required></textarea>
+                
+                <label for="topic-ids">Выберите темы:</label>
+                <select id="topic-ids" name="topic-ids" multiple required>
+                    <!-- Опции будут динамически загружены сюда -->
+                </select>
+                
+                <input type="hidden" id="task-id" name="task-id">
+                <button type="submit">Сохранить</button>
+                <button type="button" onclick="cancelTaskForm()">Отмена</button>
+            </form>
+        </div>
     </div>
 
     <!-- Модальное окно для импорта XML -->
