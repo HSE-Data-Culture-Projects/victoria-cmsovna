@@ -1,18 +1,27 @@
+:root {
+    --primary-color: #6200ea;
+    --hover-color: #3700b3;
+    --text-color: white;
+    --background-color: #f5f5f5;
+    --box-shadow-color: rgba(0, 0, 0, 0.1);
+    --border-radius: 8px;
+}
+
 /* Основные стили для всего приложения */
 body {
     font-family: 'Roboto', sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f5f5f5;
+    background-color: var(--background-color);
 }
 
 header {
-    background-color: #6200ea;
-    color: white;
+    background-color: var(--primary-color);
+    color: var(--text-color);
     padding: 10px 0;
     text-align: center;
     font-size: 24px;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0px 4px 6px var(--box-shadow-color);
 }
 
 .container {
@@ -20,8 +29,8 @@ header {
     max-width: 900px;
     padding: 20px;
     background-color: white;
-    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
+    box-shadow: 0px 2px 4px var(--box-shadow-color);
+    border-radius: var(--border-radius);
     text-align: center;
 }
 
@@ -44,26 +53,25 @@ li {
     margin-bottom: 10px;
     padding: 15px;
     border-radius: 5px;
-    box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
+    box-shadow: 0px 1px 3px var(--box-shadow-color);
 }
 
 li span {
     flex-grow: 1;
 }
 
-li .material-icons {
-    color: #6200ea;
+.material-icons {
+    color: var(--primary-color);
     cursor: pointer;
 }
 
-li .material-icons:hover {
-    color: #3700b3;
+.material-icons:hover {
+    color: var(--hover-color);
 }
 
-button.add-button,
-button.import-button {
-    background-color: #6200ea;
-    color: white;
+button {
+    background-color: var(--primary-color);
+    color: var(--text-color);
     border: none;
     padding: 10px 15px;
     margin: 10px 0;
@@ -73,34 +81,27 @@ button.import-button {
     align-items: center;
     justify-content: center;
     font-size: 16px;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0px 4px 6px var(--box-shadow-color);
     transition: background-color 0.3s ease;
 }
 
-button.add-button .material-icons,
-button.import-button .material-icons {
+button .material-icons {
     margin-right: 8px;
     font-size: 20px;
 }
 
-button.add-button:hover,
-button.import-button:hover {
-    background-color: #3700b3;
+button:hover {
+    background-color: var(--hover-color);
 }
 
-a.back-link {
+a.back-link, a {
     display: flex;
     align-items: center;
-    color: #6200ea;
+    color: var(--primary-color);
     text-decoration: none;
-    margin-top: 20px;
 }
 
-a.back-link .material-icons {
-    margin-right: 8px;
-}
-
-a.back-link:hover {
+a:hover {
     text-decoration: underline;
 }
 
@@ -108,10 +109,8 @@ input, select, textarea {
     width: 100%;
     padding: 10px;
     margin: 5px 0 20px 0;
-    display: inline-block;
     border: 1px solid #ccc;
     border-radius: 4px;
-    box-sizing: border-box;
     font-size: 16px;
 }
 
@@ -134,37 +133,26 @@ th {
     background-color: #f2f2f2;
 }
 
-a {
-    color: #6200ea;
-    text-decoration: none;
-}
-
-a:hover {
-    text-decoration: underline;
-}
-
-/* Дополнительные стили для модального окна */
 .modal {
-    display: none; 
-    position: fixed; 
-    z-index: 1; 
+    display: none;
+    position: fixed;
+    z-index: 1;
     left: 0;
     top: 0;
-    width: 100%; 
-    height: 100%; 
-    overflow: auto; 
-    background-color: rgb(0,0,0); 
-    background-color: rgba(0,0,0,0.4); 
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
     padding-top: 60px;
 }
 
 .modal-content {
     background-color: #fefefe;
-    margin: 5% auto; 
+    margin: 5% auto;
     padding: 20px;
     border: 1px solid #888;
-    width: 80%; 
-    border-radius: 8px;
+    width: 80%;
+    border-radius: var(--border-radius);
 }
 
 .close {
@@ -177,20 +165,6 @@ a:hover {
 .close:hover,
 .close:focus {
     color: black;
-    text-decoration: none;
     cursor: pointer;
 }
 
-button.edit-button {
-    background-color: #6200ea;
-    color: white;
-    border: none;
-    padding: 8px;
-    margin-left: 10px;
-    cursor: pointer;
-    border-radius: 4px;
-}
-
-button.edit-button:hover {
-    background-color: #3700b3;
-}
