@@ -1,20 +1,35 @@
 // import.js - Логика для импорта заданий из XML
 
-document.getElementById('import-form').addEventListener('submit', function(event) {
+// import.js
+document.getElementById('import-form').addEventListener('submit', async function (event) {
     event.preventDefault();
 
     const fileInput = document.getElementById('xml-file');
     const file = fileInput.files[0];
 
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            const xmlContent = e.target.result;
-            parseAndStoreTasks(xmlContent);
-        };
-        reader.readAsText(file);
-    } else {
+    if (!file) {
         alert('Пожалуйста, выберите файл для импорта.');
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+        const response = await fetch('http://localhost:3000/api/import', {
+            method: 'POST',
+            body: formData,
+        });
+
+        if (response.ok) {
+            alert('Файл успешно загружен!');
+            document.getElementById('importModal').style.display = 'none';
+        } else {
+            alert('Ошибка при загрузке файла.');
+        }
+    } catch (error) {
+        console.error('Ошибка при загрузке файла:', error);
+        alert('Ошибка при загрузке файла.');
     }
 });
 

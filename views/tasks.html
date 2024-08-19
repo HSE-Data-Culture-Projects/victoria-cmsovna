@@ -41,8 +41,46 @@
         </div>
     </div>
 
+    <!-- Секция для отображения загруженных XML файлов -->
+    <div class="container">
+        <h2>Загруженные XML файлы</h2>
+        <ul id="file-list">
+            <!-- Список загруженных XML файлов будет динамически загружен сюда -->
+        </ul>
+    </div>
+
     <script src="../js/main.js"></script>
     <script src="../js/task.js"></script>
     <script src="../js/import.js"></script>
+
+    <script>
+        // Загрузка списка файлов
+        async function loadFiles() {
+            try {
+                const response = await fetch('http://localhost:3000/api/import');
+                const files = await response.json();
+
+                const fileList = document.getElementById('file-list');
+                fileList.innerHTML = '';
+
+                files.forEach(file => {
+                    const li = document.createElement('li');
+                    const downloadLink = document.createElement('a');
+                    downloadLink.href = `http://localhost:3000/api/import/${file.id}/download`;
+                    downloadLink.textContent = file.originalname;
+                    li.appendChild(downloadLink);
+                    fileList.appendChild(li);
+                });
+            } catch (error) {
+                console.error('Ошибка при загрузке файлов:', error);
+            }
+        }
+
+        // Вызов загрузки списка заданий и файлов при загрузке страницы
+        document.addEventListener('DOMContentLoaded', () => {
+            loadTasks();
+            loadFiles();
+        });
+    </script>
 </body>
 </html>
