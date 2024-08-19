@@ -1,4 +1,4 @@
-// task.js
+// task.js - Логика для работы с заданиями
 
 async function loadTasks() {
     const urlParams = new URLSearchParams(window.location.search);
@@ -19,6 +19,18 @@ async function loadTasks() {
         tasks.forEach(task => {
             const li = document.createElement('li');
             li.textContent = task.content;
+
+            const editButton = document.createElement('button');
+            editButton.textContent = 'Изменить';
+            editButton.style.marginLeft = '10px';
+
+            editButton.addEventListener('click', (event) => {
+                event.stopPropagation();
+                updateTask(task.id);
+            });
+
+            li.appendChild(editButton);
+
             taskList.appendChild(li);
         });
     } catch (error) {
@@ -42,7 +54,7 @@ async function addTask() {
             });
 
             if (response.ok) {
-                loadTasks(); // Перезагружаем список заданий после добавления нового
+                loadTasks();
             } else {
                 console.error('Ошибка при добавлении задания');
             }
@@ -52,30 +64,27 @@ async function addTask() {
     }
 }
 
-// Загрузка списка файлов
-async function loadFiles() {
-    try {
-        const response = await fetch('http://localhost:3000/api/import');
-        const files = await response.json();
+async function updateTask(id) {
+    const taskContent = prompt('Введите новое содержимое задания:');
+    if (taskContent) {
+        try {
+            const response = await fetch(`http://localhost:3000/api/tasks/${id}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ content: taskContent })
+            });
 
-        const fileList = document.getElementById('file-list');
-        fileList.innerHTML = '';
-
-        files.forEach(file => {
-            const li = document.createElement('li');
-            const downloadLink = document.createElement('a');
-            downloadLink.href = `http://localhost:3000/api/import/${file.id}/download`;
-            downloadLink.textContent = file.originalname;
-            li.appendChild(downloadLink);
-            fileList.appendChild(li);
-        });
-    } catch (error) {
-        console.error('Ошибка при загрузке файлов:', error);
+            if (response.ok) {
+                loadTasks();
+            } else {
+                console.error('Ошибка при обновлении задания');
+            }
+        } catch (error) {
+            console.error('Ошибка при обновлении задания:', error);
+        }
     }
 }
 
-// Вызов загрузки списка заданий и файлов при загрузке страницы
-document.addEventListener('DOMContentLoaded', () => {
-    loadTasks();
-    loadFiles();
-});
+document.addEventListener('DOMContentLoaded', loadTasks);

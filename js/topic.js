@@ -20,9 +20,21 @@ async function loadTopics() {
             const li = document.createElement('li');
             li.textContent = topic.name;
             li.setAttribute('data-id', topic.id);
+
             li.addEventListener('click', () => {
                 window.location.href = `tasks.html?topicId=${topic.id}`;
             });
+
+            const editButton = document.createElement('button');
+            editButton.textContent = 'Изменить';
+            editButton.style.marginLeft = '10px';
+
+            editButton.addEventListener('click', (event) => {
+                event.stopPropagation();
+                updateTopic(topic.id);
+            });
+
+            li.appendChild(editButton);
             topicList.appendChild(li);
         });
     } catch (error) {
@@ -46,7 +58,7 @@ async function addTopic() {
             });
 
             if (response.ok) {
-                loadTopics(); // Перезагружаем список тем после добавления новой темы
+                loadTopics();
             } else {
                 console.error('Ошибка при добавлении темы');
             }
@@ -56,5 +68,27 @@ async function addTopic() {
     }
 }
 
-// Вызываем loadTopics при загрузке страницы
+async function updateTopic(id) {
+    const topicName = prompt('Введите новое название темы:');
+    if (topicName) {
+        try {
+            const response = await fetch(`http://localhost:3000/api/topics/${id}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ name: topicName })
+            });
+
+            if (response.ok) {
+                loadTopics();
+            } else {
+                console.error('Ошибка при обновлении темы');
+            }
+        } catch (error) {
+            console.error('Ошибка при обновлении темы:', error);
+        }
+    }
+}
+
 document.addEventListener('DOMContentLoaded', loadTopics);

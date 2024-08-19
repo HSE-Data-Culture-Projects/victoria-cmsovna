@@ -180,3 +180,17 @@ a:hover {
     text-decoration: none;
     cursor: pointer;
 }
+
+button.edit-button {
+    background-color: #6200ea;
+    color: white;
+    border: none;
+    padding: 8px;
+    margin-left: 10px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+button.edit-button:hover {
+    background-color: #3700b3;
+}

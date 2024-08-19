@@ -12,9 +12,22 @@ async function loadExams() {
             const li = document.createElement('li');
             li.textContent = exam.name;
             li.setAttribute('data-id', exam.id);
+
             li.addEventListener('click', () => {
                 window.location.href = `topics.html?examId=${exam.id}`;
             });
+
+            const editButton = document.createElement('button');
+            editButton.textContent = 'Изменить';
+            editButton.style.marginLeft = '10px'; // Отступ для кнопки
+
+            editButton.addEventListener('click', (event) => {
+                event.stopPropagation();
+                updateExam(exam.id);
+            });
+
+            li.appendChild(editButton);
+
             examList.appendChild(li);
         });
     } catch (error) {
@@ -35,7 +48,7 @@ async function addExam() {
             });
 
             if (response.ok) {
-                loadExams(); // Перезагружаем список экзаменов после добавления нового
+                loadExams();
             } else {
                 console.error('Ошибка при добавлении экзамена');
             }
@@ -45,5 +58,27 @@ async function addExam() {
     }
 }
 
-// Вызываем loadExams при загрузке страницы
+async function updateExam(id) {
+    const examName = prompt('Введите новое название экзамена:');
+    if (examName) {
+        try {
+            const response = await fetch(`http://localhost:3000/api/exams/${id}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ name: examName })
+            });
+
+            if (response.ok) {
+                loadExams();
+            } else {
+                console.error('Ошибка при обновлении экзамена');
+            }
+        } catch (error) {
+            console.error('Ошибка при обновлении экзамена:', error);
+        }
+    }
+}
+
 document.addEventListener('DOMContentLoaded', loadExams);

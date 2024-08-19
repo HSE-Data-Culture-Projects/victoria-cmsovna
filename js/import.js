@@ -1,6 +1,5 @@
-// import.js - Логика для импорта заданий из XML
+// import.js - Логика для импорта файлов и редактирования
 
-// import.js
 document.getElementById('import-form').addEventListener('submit', async function (event) {
     event.preventDefault();
 
@@ -33,28 +32,58 @@ document.getElementById('import-form').addEventListener('submit', async function
     }
 });
 
-function parseAndStoreTasks(xmlContent) {
-    const parser = new DOMParser();
-    const xmlDoc = parser.parseFromString(xmlContent, "application/xml");
-    const tasks = xmlDoc.getElementsByTagName('question');
-    let existingTasks = JSON.parse(localStorage.getItem('tasks')) || [];
+async function loadFiles() {
+    try {
+        const response = await fetch('http://localhost:3000/api/import');
+        const files = await response.json();
 
-    for (let i = 0; i < tasks.length; i++) {
-        const task = tasks[i];
-        const taskType = task.getAttribute('type');
-        const taskName = task.getElementsByTagName('name')[0].textContent;
-        const taskId = Date.now() + i;
+        const fileList = document.getElementById('file-list');
+        fileList.innerHTML = '';
 
-        existingTasks.push({
-            id: taskId,
-            name: taskName,
-            type: taskType,
-            content: task.innerHTML,
-            topicId: null // Здесь можно добавить логику привязки к теме
+        files.forEach(file => {
+            const li = document.createElement('li');
+            li.textContent = file.originalname;
+
+            const downloadLink = document.createElement('a');
+            downloadLink.href = `http://localhost:3000/api/import/${file.id}/download`;
+            downloadLink.textContent = 'Скачать';
+            li.appendChild(downloadLink);
+
+            const editButton = document.createElement('button');
+            editButton.textContent = 'Изменить';
+            editButton.style.marginLeft = '10px';
+
+            editButton.addEventListener('click', () => updateFile(file.id));
+
+            li.appendChild(editButton);
+            fileList.appendChild(li);
         });
+    } catch (error) {
+        console.error('Ошибка при загрузке файлов:', error);
     }
-
-    localStorage.setItem('tasks', JSON.stringify(existingTasks));
-    alert('Задания успешно импортированы!');
-    window.location.href = 'tasks.html';
 }
+
+async function updateFile(id) {
+    const newName = prompt('Введите новое имя файла:');
+    if (newName) {
+        try {
+            const response = await fetch(`http://localhost:3000/api/import/${id}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ originalname: newName })
+            });
+
+            if (response.ok) {
+                loadFiles();
+            } else {
+                console.error('Ошибка при обновлении файла');
+            }
+        } catch (error) {
+            console.error('Ошибка при обновлении файла:', error);
+        }
+    }
+}
+
+document.addEventListener('DOMContentLoaded', loadFiles);
