@@ -1,4 +1,4 @@
-// task.js - Логика для работы с заданиями
+// task.js
 
 async function loadTasks() {
     const urlParams = new URLSearchParams(window.location.search);
@@ -52,5 +52,30 @@ async function addTask() {
     }
 }
 
-// Вызываем loadTasks при загрузке страницы
-document.addEventListener('DOMContentLoaded', loadTasks);
+// Загрузка списка файлов
+async function loadFiles() {
+    try {
+        const response = await fetch('http://localhost:3000/api/import');
+        const files = await response.json();
+
+        const fileList = document.getElementById('file-list');
+        fileList.innerHTML = '';
+
+        files.forEach(file => {
+            const li = document.createElement('li');
+            const downloadLink = document.createElement('a');
+            downloadLink.href = `http://localhost:3000/api/import/${file.id}/download`;
+            downloadLink.textContent = file.originalname;
+            li.appendChild(downloadLink);
+            fileList.appendChild(li);
+        });
+    } catch (error) {
+        console.error('Ошибка при загрузке файлов:', error);
+    }
+}
+
+// Вызов загрузки списка заданий и файлов при загрузке страницы
+document.addEventListener('DOMContentLoaded', () => {
+    loadTasks();
+    loadFiles();
+});
