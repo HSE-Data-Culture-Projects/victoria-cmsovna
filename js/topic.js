@@ -133,6 +133,77 @@ async function updateTopic(id, topicName, examIds) {
     }
 }
 
+async function deleteTopic(id) {
+    try {
+        const response = await fetch(`http://localhost:3000/api/topics/${id}`, {
+            method: 'DELETE'
+        });
+
+        if (response.ok) {
+            loadTopics(); // Перезагрузка списка тем после удаления
+        } else {
+            console.error('Ошибка при удалении темы');
+        }
+    } catch (error) {
+        console.error('Ошибка при удалении темы:', error);
+    }
+}
+
+// Обновление функции loadTopics для добавления кнопки удаления
+async function loadTopics() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const examId = urlParams.get('examId');
+
+    let url = 'http://localhost:3000/api/topics';
+    if (examId) {
+        url += `/${examId}`;
+    }
+
+    try {
+        const response = await fetch(url);
+        const topics = await response.json();
+
+        const topicList = document.getElementById('topic-list');
+        topicList.innerHTML = '';
+
+        topics.forEach(topic => {
+            const li = document.createElement('li');
+            li.textContent = topic.name;
+            li.setAttribute('data-id', topic.id);
+
+            li.addEventListener('click', () => {
+                window.location.href = `tasks.html?topicId=${topic.id}`;
+            });
+
+            const editButton = document.createElement('button');
+            editButton.textContent = 'Изменить';
+            editButton.style.marginLeft = '10px';
+            editButton.addEventListener('click', (event) => {
+                event.stopPropagation();
+                updateTopic(topic.id);
+            });
+
+            const deleteButton = document.createElement('button');
+            deleteButton.textContent = 'Удалить';
+            deleteButton.classList.add('delete-button');
+            deleteButton.style.marginLeft = '10px';
+            deleteButton.addEventListener('click', (event) => {
+                event.stopPropagation();
+                if (confirm('Вы уверены, что хотите удалить эту тему?')) {
+                    deleteTopic(topic.id);
+                }
+            });
+
+            li.appendChild(editButton);
+            li.appendChild(deleteButton);
+            topicList.appendChild(li);
+        });
+    } catch (error) {
+        console.error('Ошибка при загрузке тем:', error);
+    }
+}
+
+
 // Пример вызова showTopicForm для добавления темы
 document.querySelector('.add-button').addEventListener('click', function () {
     loadExamsForTopics();

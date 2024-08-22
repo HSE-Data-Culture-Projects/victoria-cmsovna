@@ -102,6 +102,69 @@ async function updateExam(id, examName) {
     }
 }
 
+async function deleteExam(id) {
+    try {
+        const response = await fetch(`http://localhost:3000/api/exams/${id}`, {
+            method: 'DELETE'
+        });
+
+        if (response.ok) {
+            loadExams(); // Перезагрузка списка экзаменов после удаления
+        } else {
+            console.error('Ошибка при удалении экзамена');
+        }
+    } catch (error) {
+        console.error('Ошибка при удалении экзамена:', error);
+    }
+}
+
+// Обновление функции loadExams для добавления кнопки удаления
+async function loadExams() {
+    try {
+        const response = await fetch('http://localhost:3000/api/exams');
+        const exams = await response.json();
+
+        const examList = document.getElementById('exam-list');
+        examList.innerHTML = '';
+
+        exams.forEach(exam => {
+            const li = document.createElement('li');
+            li.textContent = exam.name;
+            li.setAttribute('data-id', exam.id);
+
+            li.addEventListener('click', () => {
+                window.location.href = `topics.html?examId=${exam.id}`;
+            });
+
+            const editButton = document.createElement('button');
+            editButton.textContent = 'Изменить';
+            editButton.style.marginLeft = '10px';
+            editButton.addEventListener('click', (event) => {
+                event.stopPropagation();
+                updateExam(exam.id);
+            });
+
+            const deleteButton = document.createElement('button');
+            deleteButton.textContent = 'Удалить';
+            deleteButton.classList.add('delete-button');
+            deleteButton.style.marginLeft = '10px';
+            deleteButton.addEventListener('click', (event) => {
+                event.stopPropagation();
+                if (confirm('Вы уверены, что хотите удалить этот экзамен?')) {
+                    deleteExam(exam.id);
+                }
+            });
+
+            li.appendChild(editButton);
+            li.appendChild(deleteButton);
+            examList.appendChild(li);
+        });
+    } catch (error) {
+        console.error('Ошибка при загрузке экзаменов:', error);
+    }
+}
+
+
 // Пример вызова showForm для добавления экзамена
 document.querySelector('.add-button').addEventListener('click', function () {
     showForm();

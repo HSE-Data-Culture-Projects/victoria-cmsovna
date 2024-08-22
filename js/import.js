@@ -86,4 +86,63 @@ async function updateFile(id) {
     }
 }
 
+async function deleteFile(id) {
+    try {
+        const response = await fetch(`http://localhost:3000/api/import/${id}`, {
+            method: 'DELETE'
+        });
+
+        if (response.ok) {
+            loadFiles(); // Перезагрузка списка файлов после удаления
+        } else {
+            console.error('Ошибка при удалении файла');
+        }
+    } catch (error) {
+        console.error('Ошибка при удалении файла:', error);
+    }
+}
+
+// Обновление функции loadFiles для добавления кнопки удаления
+async function loadFiles() {
+    try {
+        const response = await fetch('http://localhost:3000/api/import');
+        const files = await response.json();
+
+        const fileList = document.getElementById('file-list');
+        fileList.innerHTML = '';
+
+        files.forEach(file => {
+            const li = document.createElement('li');
+            li.textContent = file.originalname;
+
+            const downloadLink = document.createElement('a');
+            downloadLink.href = `http://localhost:3000/api/import/${file.id}/download`;
+            downloadLink.textContent = 'Скачать';
+            li.appendChild(downloadLink);
+
+            const editButton = document.createElement('button');
+            editButton.textContent = 'Изменить';
+            editButton.style.marginLeft = '10px';
+            editButton.addEventListener('click', () => updateFile(file.id));
+
+            const deleteButton = document.createElement('button');
+            deleteButton.textContent = 'Удалить';
+            deleteButton.classList.add('delete-button');
+            deleteButton.style.marginLeft = '10px';
+            deleteButton.addEventListener('click', () => {
+                if (confirm('Вы уверены, что хотите удалить этот файл?')) {
+                    deleteFile(file.id);
+                }
+            });
+
+            li.appendChild(editButton);
+            li.appendChild(deleteButton);
+            fileList.appendChild(li);
+        });
+    } catch (error) {
+        console.error('Ошибка при загрузке файлов:', error);
+    }
+}
+
+
 document.addEventListener('DOMContentLoaded', loadFiles);
