@@ -141,7 +141,7 @@ async function loadExams() {
             editButton.style.marginLeft = '10px';
             editButton.addEventListener('click', (event) => {
                 event.stopPropagation();
-                updateExam(exam.id);
+                showForm(exam.id, exam.name);
             });
 
             const deleteButton = document.createElement('button');
