@@ -54,7 +54,10 @@ async function loadTopics() {
                     event.stopPropagation();
                     updateTopic(topic.id);
                 });
-
+                editButton.addEventListener('click', (event) => {
+                    event.stopPropagation();
+                    patch(topic.id, topic.name, topic.exams.map(exam => exam.id).join(','));
+                });
 
                 const deleteButton = document.createElement('button');
                 deleteButton.textContent = 'Удалить';
@@ -95,6 +98,42 @@ document.getElementById('topic-form').addEventListener('submit', async function 
     hideTopicForm();
 });
 
+async function patchTopic(topicId, topicName, examIds) {
+    try {
+        const response = await fetch(`http://localhost:3000/api/topics/${topicId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ name: topicName, examIds: examIds })
+        });
+
+        if (response.ok) {
+            loadTopics();
+        } else {
+            console.error('Ошибка при обновлении темы');
+        }
+    } catch (error) {
+        console.error('Ошибка при обновлении темы:', error);
+    }
+}
+
+document.getElementById('topic-form').addEventListener('submit', async function (event) {
+    event.preventDefault();
+
+    const topicName = document.getElementById('topic-name').value;
+    const examIdsInput = document.getElementById('exam-ids').value;
+    const examIds = examIdsInput.split(',').map(id => id.trim());
+    const topicId = document.getElementById('topic-id').value;
+
+    if (topicId) {
+        await patchTopic(topicId, topicName, examIds);
+    } else {
+        await addTopic(topicName, examIds);
+    }
+
+    hideTopicForm();
+});
 
 function showTopicForm(topicId = '', topicName = '', examIds = '') {
     document.getElementById('topic-name').value = topicName;
