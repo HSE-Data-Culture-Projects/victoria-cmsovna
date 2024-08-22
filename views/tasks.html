@@ -18,14 +18,14 @@
             <!-- Список заданий будет динамически загружен сюда -->
         </ul>
         <button class="add-button" onclick="showTaskForm()">
-            <span class="material-icons">add</span> Добавить задание
+            <img src="../assets/svg/add_circle.svg" alt="Добавить" class="icon"> Добавить задание
         </button>
         <button class="import-button" onclick="document.getElementById('importModal').style.display='block'">
-            <span class="material-icons">file_upload</span> Импортировать XML
+            <img src="../assets/svg/import.svg" alt="Импортировать" class="icon"> Импортировать XML
         </button>
         <br>
         <a href="topics.html" class="back-link">
-            Назад к темам
+            <img src="../assets/svg/arrow_back.svg" alt="Назад" class="icon"> Назад к темам
         </a>
 
         <div class="form-container" id="task-form-container" style="display: none;">
@@ -39,7 +39,7 @@
                 </select>
 
                 <input type="hidden" id="task-id" name="task-id">
-                <button type="submit">Сохранить</button>
+                <button type="submit"><img src="../assets/svg/save.svg" alt="Сохранить" class="icon">Сохранить</button>
                 <button type="button" onclick="cancelTaskForm()">Отмена</button>
             </form>
         </div>

@@ -1,4 +1,10 @@
 - .DS_Store
+- assets
+  - .DS_Store
+  - svg
+    - add_circle.svg
+    - arrow_back.svg
+    - download.svg
 - css
   - styles.css
 - data
