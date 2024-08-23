@@ -1,10 +1,12 @@
-- .DS_Store
 - assets
   - .DS_Store
   - svg
     - add_circle.svg
     - arrow_back.svg
     - download.svg
+    - edit.svg
+    - import.svg
+    - save.svg
 - css
   - styles.css
 - data
@@ -13,7 +15,6 @@
   - topics.json
 - js
   - exam.js
-  - import.js
   - main.js
   - task.js
   - topic.js

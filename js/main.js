@@ -1,5 +1,3 @@
-// main.js - Основной файл JavaScript для управления логикой приложения
-
 document.addEventListener('DOMContentLoaded', function() {
     loadPage();
 });

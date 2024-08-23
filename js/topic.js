@@ -82,22 +82,6 @@ async function loadTopics() {
     }
 }
 
-
-document.getElementById('topic-form').addEventListener('submit', async function (event) {
-    event.preventDefault();
-    const topicName = document.getElementById('topic-name').value;
-    const examIdsInput = document.getElementById('exam-ids').value;
-    const examIds = examIdsInput.split(',').map(id => id.trim());
-    const topicId = document.getElementById('topic-id').value;
-
-    if (topicId) {
-        await updateTopic(topicId, topicName, examIds);
-    } else {
-        await addTopic(topicName, examIds);
-    }
-    hideTopicForm();
-});
-
 async function patchTopic(topicId, topicName, examIds) {
     try {
         const response = await fetch(`http://localhost:3000/api/topics/${topicId}`, {
