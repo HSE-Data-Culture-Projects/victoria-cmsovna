@@ -30,6 +30,7 @@ async function addTask() {
 }
 
 // Загрузка и отображение всех задач (включая файлы)
+// Загрузка и отображение всех задач (включая файлы)
 async function loadTasks() {
     try {
         const response = await fetch('http://localhost:3000/api/tasks');
@@ -42,16 +43,33 @@ async function loadTasks() {
             const li = document.createElement('li');
             li.textContent = task.content;
 
+            // Отображаем привязанные темы
+            if (task.topics && task.topics.length > 0) {
+                const topicList = document.createElement('ul');
+                task.topics.forEach(topic => {
+                    const topicLi = document.createElement('li');
+                    topicLi.textContent = topic.name;
+                    topicList.appendChild(topicLi);
+                });
+                li.appendChild(topicList);
+            }
+
             if (task.originalname) {
-                const fileLink = document.createElement('a');
-                fileLink.href = `http://localhost:3000/uploads/${task.filename}`; // Правильная ссылка на файл
-                fileLink.textContent = task.originalname;
-                fileLink.download = task.originalname;
-                li.appendChild(fileLink);
+                const downloadButton = document.createElement('button');
+                downloadButton.textContent = 'Скачать';
+                downloadButton.addEventListener('click', () => {
+                    const link = document.createElement('a');
+                    link.href = `http://localhost:3000/uploads/${task.filename}`;
+                    link.download = task.originalname;
+                    link.click();
+                });
+                downloadButton.classList.add('download-button'); // Добавим класс для кнопки
+                li.appendChild(downloadButton);
             }
 
             const editButton = document.createElement('button');
             editButton.textContent = 'Изменить';
+            editButton.classList.add('edit-button');
             editButton.addEventListener('click', () => {
                 loadTopicsForTasks();
                 showTaskForm(task.id, task.content, task.topicIds);
@@ -60,6 +78,7 @@ async function loadTasks() {
 
             const deleteButton = document.createElement('button');
             deleteButton.textContent = 'Удалить';
+            deleteButton.classList.add('delete-button');
             deleteButton.addEventListener('click', () => deleteTask(task.id));
             li.appendChild(deleteButton);
 

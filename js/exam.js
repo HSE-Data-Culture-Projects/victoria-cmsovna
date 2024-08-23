@@ -13,10 +13,6 @@ async function loadExams() {
             li.textContent = exam.name;
             li.setAttribute('data-id', exam.id);
 
-            li.addEventListener('click', () => {
-                window.location.href = `topics.html?examId=${exam.id}`;
-            });
-
             const editButton = document.createElement('button');
             editButton.textContent = 'Изменить';
             editButton.style.marginLeft = '10px'; // Отступ для кнопки

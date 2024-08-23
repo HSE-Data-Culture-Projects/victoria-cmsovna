@@ -21,67 +21,6 @@ async function loadExamsForTopics() {
     }
 }
 
-async function loadTopics() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const examId = urlParams.get('examId');
-
-    let url = 'http://localhost:3000/api/topics';
-    if (examId) {
-        url += `/${examId}`;
-    }
-
-    try {
-        const response = await fetch(url);
-        if (response.ok) {
-            const topics = await response.json();
-
-            const topicList = document.getElementById('topic-list');
-            topicList.innerHTML = '';
-
-            topics.forEach(topic => {
-                const li = document.createElement('li');
-                li.textContent = topic.name;
-                li.setAttribute('data-id', topic.id);
-
-                li.addEventListener('click', () => {
-                    window.location.href = `tasks.html?topicId=${topic.id}`;
-                });
-
-                const editButton = document.createElement('button');
-                editButton.textContent = 'Изменить';
-                editButton.style.marginLeft = '10px';
-                editButton.addEventListener('click', (event) => {
-                    event.stopPropagation();
-                    updateTopic(topic.id);
-                });
-                editButton.addEventListener('click', (event) => {
-                    event.stopPropagation();
-                    patch(topic.id, topic.name, topic.exams.map(exam => exam.id).join(','));
-                });
-
-                const deleteButton = document.createElement('button');
-                deleteButton.textContent = 'Удалить';
-                deleteButton.classList.add('delete-button');
-                deleteButton.style.marginLeft = '10px';
-                deleteButton.addEventListener('click', (event) => {
-                    event.stopPropagation();
-                    if (confirm('Вы уверены, что хотите удалить эту тему?')) {
-                        deleteTopic(topic.id);
-                    }
-                });
-
-                li.appendChild(editButton);
-                li.appendChild(deleteButton);
-                topicList.appendChild(li);
-            });
-        } else {
-            console.error('Ошибка при загрузке тем');
-        }
-    } catch (error) {
-        console.error('Ошибка при загрузке тем:', error);
-    }
-}
-
 async function patchTopic(topicId, topicName, examIds) {
     try {
         const response = await fetch(`http://localhost:3000/api/topics/${topicId}`, {
@@ -106,8 +45,8 @@ document.getElementById('topic-form').addEventListener('submit', async function 
     event.preventDefault();
 
     const topicName = document.getElementById('topic-name').value;
-    const examIdsInput = document.getElementById('exam-ids').value;
-    const examIds = examIdsInput.split(',').map(id => id.trim());
+    
+    const examIds = Array.from(document.getElementById('exam-ids').selectedOptions).map(option => option.value);
     const topicId = document.getElementById('topic-id').value;
 
     if (topicId) {
@@ -118,6 +57,7 @@ document.getElementById('topic-form').addEventListener('submit', async function 
 
     hideTopicForm();
 });
+
 
 function showTopicForm(topicId = '', topicName = '', examIds = '') {
     document.getElementById('topic-name').value = topicName;
@@ -157,7 +97,6 @@ async function addTopic(topicName, examIds) {
 
 async function updateTopic(id) {
     try {
-        // Запрос на получение данных о теме для редактирования
         const response = await fetch(`http://localhost:3000/api/topics/${id}`);
         if (response.ok) {
             const topic = await response.json();
@@ -165,11 +104,18 @@ async function updateTopic(id) {
             // Загружаем список экзаменов для формы редактирования
             await loadExamsForTopics();
 
-            // Получаем ID экзаменов, связанных с темой
-            const examIds = topic.exams ? topic.exams.map(exam => exam.id).join(',') : '';
+            // Устанавливаем выбранные экзамены для темы
+            const examIds = topic.exams ? topic.exams.map(exam => exam.id) : [];
+            const examSelect = document.getElementById('exam-ids');
+            
+            Array.from(examSelect.options).forEach(option => {
+                if (examIds.includes(option.value)) {
+                    option.selected = true; // Отмечаем выбранные экзамены
+                }
+            });
 
-            // Открываем форму с заполненными данными темы
-            showTopicForm(topic.id, topic.name, examIds);
+            // Открываем форму с заполненными данными
+            showTopicForm(topic.id, topic.name, examIds.join(','));
         } else {
             console.error('Ошибка при загрузке данных темы');
         }
@@ -177,6 +123,7 @@ async function updateTopic(id) {
         console.error('Ошибка при загрузке данных темы:', error);
     }
 }
+
 
 
 async function deleteTopic(id) {
@@ -195,7 +142,6 @@ async function deleteTopic(id) {
     }
 }
 
-// Обновление функции loadTopics для добавления кнопки удаления
 async function loadTopics() {
     const urlParams = new URLSearchParams(window.location.search);
     const examId = urlParams.get('examId');
@@ -207,43 +153,59 @@ async function loadTopics() {
 
     try {
         const response = await fetch(url);
-        const topics = await response.json();
+        if (response.ok) {
+            const topics = await response.json();
 
-        const topicList = document.getElementById('topic-list');
-        topicList.innerHTML = '';
+            const topicList = document.getElementById('topic-list');
+            topicList.innerHTML = '';
 
-        topics.forEach(topic => {
-            const li = document.createElement('li');
-            li.textContent = topic.name;
-            li.setAttribute('data-id', topic.id);
+            topics.forEach(topic => {
+                const li = document.createElement('li');
+                li.textContent = topic.name;
 
-            li.addEventListener('click', () => {
-                window.location.href = `tasks.html?topicId=${topic.id}`;
-            });
-
-            const editButton = document.createElement('button');
-            editButton.textContent = 'Изменить';
-            editButton.style.marginLeft = '10px';
-            editButton.addEventListener('click', (event) => {
-                event.stopPropagation();
-                updateTopic(topic.id);
-            });
-
-            const deleteButton = document.createElement('button');
-            deleteButton.textContent = 'Удалить';
-            deleteButton.classList.add('delete-button');
-            deleteButton.style.marginLeft = '10px';
-            deleteButton.addEventListener('click', (event) => {
-                event.stopPropagation();
-                if (confirm('Вы уверены, что хотите удалить эту тему?')) {
-                    deleteTopic(topic.id);
+                // Отображаем привязанные экзамены, если они есть
+                if (topic.exams && topic.exams.length > 0) {
+                    const examList = document.createElement('ul'); // Подсписок для экзаменов
+                    topic.exams.forEach(exam => {
+                        const examLi = document.createElement('li');
+                        examLi.textContent = exam.name; // Отображаем имя экзамена
+                        examList.appendChild(examLi);
+                    });
+                    li.appendChild(examList);
+                } else {
+                    // Если нет экзаменов, отображаем сообщение
+                    const noExams = document.createElement('p');
+                    noExams.textContent = 'Нет привязанных экзаменов';
+                    li.appendChild(noExams);
                 }
-            });
 
-            li.appendChild(editButton);
-            li.appendChild(deleteButton);
-            topicList.appendChild(li);
-        });
+                // Кнопка редактирования
+                const editButton = document.createElement('button');
+                editButton.textContent = 'Изменить';
+                editButton.style.marginLeft = '10px';
+                editButton.addEventListener('click', (event) => {
+                    event.stopPropagation();
+                    updateTopic(topic.id);
+                });
+
+                // Кнопка удаления
+                const deleteButton = document.createElement('button');
+                deleteButton.textContent = 'Удалить';
+                deleteButton.style.marginLeft = '10px';
+                deleteButton.addEventListener('click', (event) => {
+                    event.stopPropagation();
+                    if (confirm('Вы уверены, что хотите удалить эту тему?')) {
+                        deleteTopic(topic.id);
+                    }
+                });
+
+                li.appendChild(editButton);
+                li.appendChild(deleteButton);
+                topicList.appendChild(li);
+            });
+        } else {
+            console.error('Ошибка при загрузке тем');
+        }
     } catch (error) {
         console.error('Ошибка при загрузке тем:', error);
     }
