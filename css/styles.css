@@ -55,6 +55,8 @@ li {
     border-radius: var(--border-radius);
     box-shadow: 0px 2px 4px var(--box-shadow-color);
     transition: background-color 0.3s ease;
+    justify-content: space-between;
+    display: flex;
 }
 
 li:hover {
@@ -82,18 +84,30 @@ li ul li:hover {
     background-color: var(--table-row-hover);
 }
 
+/* Контейнер для кнопок */
+.exam-button-container,
+.topics-button-container,
+.tasks-button-container {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
 /* Стили кнопок */
 button {
     background-color: var(--primary-color);
     color: var(--text-color);
     border: none;
-    padding: 10px 20px;
+    padding: 0 20px;
     border-radius: 50px;
     font-size: 16px;
     cursor: pointer;
     box-shadow: 0px 4px 6px var(--box-shadow-color);
     transition: background-color 0.3s ease;
     margin-right: 10px;
+    height: 40px;
+    justify-content: center;
+    align-items: center;
 }
 
 button:hover {
@@ -109,7 +123,8 @@ button.delete-button:hover {
 }
 
 /* Стили ссылок */
-a.back-link, a {
+a.back-link,
+a {
     display: inline-flex;
     align-items: center;
     color: var(--primary-color);
@@ -121,55 +136,10 @@ a:hover {
     text-decoration: underline;
 }
 
-/* Стили для элементов списка */
-ul#task-list li {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start; /* Выравнивание кнопок по левому краю */
-    padding: 15px;
-    margin-bottom: 10px;
-    border-radius: var(--border-radius);
-    background-color: #f9f9f9;
-    box-shadow: 0px 1px 3px var(--box-shadow-color);
-}
-
-/* Стили кнопок в заданиях */
-ul#task-list button {
-    margin-top: 10px;
-    padding: 10px 15px;
-    background-color: var(--primary-color);
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 16px;
-    box-shadow: 0px 4px 6px var(--box-shadow-color);
-    transition: background-color 0.3s ease;
-}
-
-ul#task-list button:hover {
-    background-color: var(--hover-color);
-}
-
-ul#task-list button.download-button {
-    margin-top: 5px;
-}
-
-ul#task-list button.edit-button {
-    margin-top: 10px;
-}
-
-ul#task-list button.delete-button {
-    background-color: #e53935;
-    margin-top: 10px;
-}
-
-ul#task-list button.delete-button:hover {
-    background-color: #b71c1c;
-}
-
 /* Поля ввода и формы */
-input, select, textarea {
+input,
+select,
+textarea {
     width: 100%;
     padding: 10px;
     margin: 5px 0 20px 0;
@@ -185,11 +155,14 @@ table {
     margin: 20px 0;
 }
 
-table, th, td {
+table,
+th,
+td {
     border: 1px solid #ddd;
 }
 
-th, td {
+th,
+td {
     padding: 12px;
     text-align: left;
 }
@@ -286,4 +259,18 @@ button.delete-button {
 
 button.delete-button:hover {
     background-color: #b71c1c;
+}
+
+.icon {
+    height: 16px;
+}
+
+.edit-page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.main-button {
+    background-color: blueviolet;
 }

@@ -9,21 +9,20 @@
 </head>
 
 <body>
-    <header>
-        Управление темами
-    </header>
+    <script src="./../js/header_component.js"></script>
+    <header-component></header-component>
     <div class="container">
-        <h2>Темы</h2>
+        <div class="edit-page-header">
+            <h2>Темы</h2>
+            <button class="add-button" onclick="showTopicForm()">
+                <img src="../assets/svg/add_circle.svg" alt="Добавить" class="icon"> Добавить тему
+            </button>
+        </div>
+
         <ul id="topic-list">
             <!-- Список тем будет динамически загружен сюда -->
         </ul>
-        <button class="add-button" onclick="showTopicForm()">
-            <img src="../assets/svg/add_circle.svg" alt="Добавить" class="icon"> Добавить тему
-        </button>
         <br>
-        <a href="index.html" class="back-link">
-            <img src="../assets/svg/arrow_back.svg" alt="Назад" class="icon"> Назад к экзаменам
-        </a>
         <div class="form-container" id="topic-form-container" style="display: none;">
             <form id="topic-form">
                 <label for="topic-name">Название темы:</label>

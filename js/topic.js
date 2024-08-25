@@ -24,7 +24,7 @@ async function loadExamsForTopics() {
 async function patchTopic(topicId, topicName, examIds) {
     try {
         const response = await fetch(`http://localhost:3000/api/topics/${topicId}`, {
-            method: 'PUT',
+            method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json'
             },
@@ -45,7 +45,7 @@ document.getElementById('topic-form').addEventListener('submit', async function 
     event.preventDefault();
 
     const topicName = document.getElementById('topic-name').value;
-    
+
     const examIds = Array.from(document.getElementById('exam-ids').selectedOptions).map(option => option.value);
     const topicId = document.getElementById('topic-id').value;
 
@@ -107,7 +107,7 @@ async function updateTopic(id) {
             // Устанавливаем выбранные экзамены для темы
             const examIds = topic.exams ? topic.exams.map(exam => exam.id) : [];
             const examSelect = document.getElementById('exam-ids');
-            
+
             Array.from(examSelect.options).forEach(option => {
                 if (examIds.includes(option.value)) {
                     option.selected = true; // Отмечаем выбранные экзамены
@@ -179,6 +179,10 @@ async function loadTopics() {
                     li.appendChild(noExams);
                 }
 
+                // Создаем контейнер для кнопок
+                const buttonContainer = document.createElement('div');
+                buttonContainer.classList.add('topics-button-container');
+
                 // Кнопка редактирования
                 const editButton = document.createElement('button');
                 editButton.textContent = 'Изменить';
@@ -190,6 +194,7 @@ async function loadTopics() {
 
                 // Кнопка удаления
                 const deleteButton = document.createElement('button');
+                deleteButton.classList.add('delete-button');
                 deleteButton.textContent = 'Удалить';
                 deleteButton.style.marginLeft = '10px';
                 deleteButton.addEventListener('click', (event) => {
@@ -199,9 +204,16 @@ async function loadTopics() {
                     }
                 });
 
-                li.appendChild(editButton);
-                li.appendChild(deleteButton);
+                // Добавляем кнопки в контейнер
+                buttonContainer.appendChild(editButton);
+                buttonContainer.appendChild(deleteButton);
+
+                // Добавляем контейнер с кнопками в элемент списка
+                li.appendChild(buttonContainer);
+
+                // Добавляем элемент списка в список тем
                 topicList.appendChild(li);
+
             });
         } else {
             console.error('Ошибка при загрузке тем');

@@ -128,10 +128,11 @@ async function loadExams() {
             li.textContent = exam.name;
             li.setAttribute('data-id', exam.id);
 
-            li.addEventListener('click', () => {
-                window.location.href = `topics.html?examId=${exam.id}`;
-            });
+            // Создаем контейнер для кнопок
+            const buttonContainer = document.createElement('div');
+            buttonContainer.classList.add('exam-button-container');
 
+            // Создаем кнопку "Изменить"
             const editButton = document.createElement('button');
             editButton.textContent = 'Изменить';
             editButton.style.marginLeft = '10px';
@@ -140,6 +141,7 @@ async function loadExams() {
                 showForm(exam.id, exam.name);
             });
 
+            // Создаем кнопку "Удалить"
             const deleteButton = document.createElement('button');
             deleteButton.textContent = 'Удалить';
             deleteButton.classList.add('delete-button');
@@ -151,9 +153,16 @@ async function loadExams() {
                 }
             });
 
-            li.appendChild(editButton);
-            li.appendChild(deleteButton);
+            // Добавляем кнопки в контейнер
+            buttonContainer.appendChild(editButton);
+            buttonContainer.appendChild(deleteButton);
+
+            // Добавляем контейнер с кнопками в элемент списка
+            li.appendChild(buttonContainer);
+
+            // Добавляем элемент списка в список экзаменов
             examList.appendChild(li);
+
         });
     } catch (error) {
         console.error('Ошибка при загрузке экзаменов:', error);
