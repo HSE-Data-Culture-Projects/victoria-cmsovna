@@ -10,6 +10,11 @@
     --table-row-hover: #f1f1f1;
 }
 
+/* Для лучшей адаптивности формы добавим box-sizing */
+* {
+    box-sizing: border-box; /* NEW */
+}
+
 /* Основные стили для всего приложения */
 body {
     font-family: 'Roboto', sans-serif;
@@ -27,6 +32,7 @@ header {
     box-shadow: 0px 4px 6px var(--box-shadow-color);
 }
 
+/* Карточка (контейнер) - общий вид */
 .container {
     margin: 20px auto;
     max-width: 900px;
@@ -34,63 +40,50 @@ header {
     background-color: white;
     box-shadow: 0px 2px 4px var(--box-shadow-color);
     border-radius: var(--border-radius);
-    text-align: center;
+    text-align: center; /* По умолчанию по центру, но ниже переопределим для формы */
 }
 
-h2 {
-    font-size: 24px;
-    color: #333;
+/* NEW: Для страницы авторизации (data-page="auth") - 
+   чтобы сузить карточку и выровнять поля по левому краю. 
+   Если вам удобно, используйте другой селектор (например, класс).
+*/
+[data-page="auth"] .container {
+    max-width: 400px;       /* Уже узкий контейнер для формы */
+    text-align: left;       /* Лейблы и поля по левому краю */
+    margin-top: 60px;       /* Небольшой отступ сверху (центровка по вертикали) */
+}
+
+/* NEW: Выравниваем заголовок в форме по центру */
+[data-page="auth"] .container h2 {
+    text-align: center;
     margin-bottom: 20px;
 }
 
-ul {
-    list-style-type: none;
-    padding: 0;
-}
-
-li {
-    background-color: var(--table-row-bg);
-    margin-bottom: 15px;
-    padding: 15px;
-    border-radius: var(--border-radius);
-    box-shadow: 0px 2px 4px var(--box-shadow-color);
-    transition: background-color 0.3s ease;
-    justify-content: space-between;
-    display: flex;
-}
-
-li:hover {
-    background-color: var(--table-row-hover);
-}
-
-li ul {
-    margin-top: 10px;
-    padding-left: 0;
-}
-
-li ul li {
-    background-color: var(--table-row-bg);
-    border: 1px solid #ddd;
-    margin-bottom: 8px;
+/* Поля и формы */
+input,
+select,
+textarea {
+    width: 100%;
     padding: 10px;
-    border-radius: 6px;
+    margin: 5px 0 20px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
     font-size: 16px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
 }
 
-li ul li:hover {
-    background-color: var(--table-row-hover);
+/* Группа полей (лейбл + инпут).  
+   Убедитесь, что в вашем HTML используете .form-group */
+.form-group {
+    margin-bottom: 15px;
 }
 
-/* Контейнер для кнопок */
-.exam-button-container,
-.topics-button-container,
-.tasks-button-container {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+    /* text-align: left; не нужно явно, 
+       т.к. [data-page="auth"] .container -> text-align: left 
+       уже задаёт направление */
 }
 
 /* Стили кнопок */
@@ -99,13 +92,14 @@ button {
     color: var(--text-color);
     border: none;
     padding: 0 20px;
-    border-radius: 50px;
+    border-radius: 8px;
     font-size: 16px;
     cursor: pointer;
     box-shadow: 0px 4px 6px var(--box-shadow-color);
     transition: background-color 0.3s ease;
     margin-right: 10px;
     height: 40px;
+    display: inline-flex;
     justify-content: center;
     align-items: center;
 }
@@ -122,6 +116,13 @@ button.delete-button:hover {
     background-color: #b71c1c;
 }
 
+/* NEW: делаем кнопку «Войти» (main-button) во всю ширину 
+   только на странице авторизации */
+[data-page="auth"] .container button.main-button {
+    width: 100%;
+    margin-right: 0; /* убираем отступ справа, раз она на всю ширину */
+}
+
 /* Стили ссылок */
 a.back-link,
 a {
@@ -136,19 +137,7 @@ a:hover {
     text-decoration: underline;
 }
 
-/* Поля ввода и формы */
-input,
-select,
-textarea {
-    width: 100%;
-    padding: 10px;
-    margin: 5px 0 20px 0;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 16px;
-}
-
-/* Стили для таблиц */
+/* Стили для таблиц (остальные части приложения) */
 table {
     width: 100%;
     border-collapse: collapse;
@@ -206,7 +195,7 @@ th {
     cursor: pointer;
 }
 
-/* Стили для пустого состояния */
+/* Пустое состояние */
 li p {
     font-size: 14px;
     color: #888;
@@ -241,7 +230,7 @@ table td .action-button:hover {
     background-color: var(--hover-color);
 }
 
-/* Кнопка удаления */
+/* Кнопка удаления (дублирована выше, оставим на всякий случай) */
 button.delete-button {
     background-color: #e53935;
     color: white;
@@ -273,4 +262,5 @@ button.delete-button:hover {
 
 .main-button {
     background-color: blueviolet;
+    /* остальное наследует от button */
 }
