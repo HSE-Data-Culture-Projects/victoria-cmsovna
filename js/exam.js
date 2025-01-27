@@ -60,10 +60,12 @@ function cancelForm() {
 
 async function addExam(examName) {
     try {
+        const token = localStorage.getItem('token');
         const response = await fetch('http://localhost:3000/api/exams', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
             },
             body: JSON.stringify({ name: examName })
         });
@@ -80,10 +82,12 @@ async function addExam(examName) {
 
 async function updateExam(id, examName) {
     try {
+        const token = localStorage.getItem('token');
         const response = await fetch(`http://localhost:3000/api/exams/${id}`, {
             method: 'PATCH',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
             },
             body: JSON.stringify({ name: examName })
         });
@@ -100,12 +104,16 @@ async function updateExam(id, examName) {
 
 async function deleteExam(id) {
     try {
+        const token = localStorage.getItem('token');
         const response = await fetch(`http://localhost:3000/api/exams/${id}`, {
-            method: 'DELETE'
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
         });
 
         if (response.ok) {
-            loadExams(); // Перезагрузка списка экзаменов после удаления
+            loadExams();
         } else {
             console.error('Ошибка при удалении экзамена');
         }

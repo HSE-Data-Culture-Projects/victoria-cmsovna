@@ -10,12 +10,16 @@ async function addTask() {
     formData.append('topicIds', topicIds.join(','));
 
     if (fileInput.files.length > 0) {
-        formData.append('file', fileInput.files[0]); // Добавляем файл, если он был загружен
+        formData.append('file', fileInput.files[0]);
     }
 
     try {
+        const token = localStorage.getItem('token');
         const response = await fetch('http://localhost:3000/api/tasks', {
             method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            },
             body: formData
         });
 
@@ -29,7 +33,6 @@ async function addTask() {
     }
 }
 
-// Загрузка и отображение всех задач (включая файлы)
 // Загрузка и отображение всех задач (включая файлы)
 async function loadTasks() {
     try {
@@ -112,12 +115,16 @@ async function updateTask(id) {
     formData.append('topicIds', topicIds.join(','));
 
     if (fileInput.files.length > 0) {
-        formData.append('file', fileInput.files[0]); // Добавляем новый файл, если он был загружен
+        formData.append('file', fileInput.files[0]);
     }
 
     try {
+        const token = localStorage.getItem('token');
         const response = await fetch(`http://localhost:3000/api/tasks/${id}`, {
             method: 'PATCH',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            },
             body: formData
         });
 
@@ -135,12 +142,16 @@ async function updateTask(id) {
 async function deleteTask(id) {
     if (confirm('Вы уверены, что хотите удалить это задание?')) {
         try {
+            const token = localStorage.getItem('token');
             const response = await fetch(`http://localhost:3000/api/tasks/${id}`, {
-                method: 'DELETE'
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
             });
 
             if (response.ok) {
-                loadTasks(); // Перезагрузка списка задач после удаления
+                loadTasks();
             } else {
                 console.error('Ошибка при удалении задания');
             }

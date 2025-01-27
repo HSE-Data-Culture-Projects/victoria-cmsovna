@@ -23,10 +23,12 @@ async function loadExamsForTopics() {
 
 async function patchTopic(topicId, topicName, examIds) {
     try {
+        const token = localStorage.getItem('token');
         const response = await fetch(`http://localhost:3000/api/topics/${topicId}`, {
             method: 'PATCH',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
             },
             body: JSON.stringify({ name: topicName, examIds: examIds })
         });
@@ -77,10 +79,12 @@ function cancelTopicForm() {
 
 async function addTopic(topicName, examIds) {
     try {
+        const token = localStorage.getItem('token');
         const response = await fetch('http://localhost:3000/api/topics', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
             },
             body: JSON.stringify({ name: topicName, examIds: examIds })
         });
@@ -94,7 +98,6 @@ async function addTopic(topicName, examIds) {
         console.error('Ошибка при добавлении темы:', error);
     }
 }
-
 async function updateTopic(id) {
     try {
         const response = await fetch(`http://localhost:3000/api/topics/${id}`);
@@ -128,12 +131,16 @@ async function updateTopic(id) {
 
 async function deleteTopic(id) {
     try {
+        const token = localStorage.getItem('token');
         const response = await fetch(`http://localhost:3000/api/topics/${id}`, {
-            method: 'DELETE'
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
         });
 
         if (response.ok) {
-            loadTopics(); // Перезагрузка списка тем после удаления
+            loadTopics();
         } else {
             console.error('Ошибка при удалении темы');
         }
