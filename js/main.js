@@ -1,10 +1,41 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     loadPage();
 });
 
+function isTokenExpired(token) {
+    if (!token) return true;
+    try {
+        const payloadBase64 = token.split('.')[1];
+        const payload = JSON.parse(atob(payloadBase64));
+        return payload.exp < Date.now() / 1000;
+    } catch (err) {
+        return true;
+    }
+}
+
+(function checkAuth() {
+    const token = localStorage.getItem('token');
+    const isAuthPage = window.location.pathname.endsWith('auth.html');
+
+    if (!token && !isAuthPage) {
+        window.location.href = 'auth.html';
+        return;
+    }
+
+    if (token && isTokenExpired(token)) {
+        localStorage.removeItem('token');
+        window.location.href = 'auth.html';
+        return;
+    }
+
+    if (token && isAuthPage) {
+        window.location.href = 'index.html';
+    }
+})();
+
 function loadPage() {
     const page = document.body.getAttribute('data-page');
-    switch(page) {
+    switch (page) {
         case 'index':
             // На главной странице не нужно загружать дополнительные данные
             break;
@@ -23,7 +54,7 @@ function loadPage() {
 }
 
 function navigateTo(page) {
-    switch(page) {
+    switch (page) {
         case 'exams':
             window.location.href = 'exams.html';
             break;
