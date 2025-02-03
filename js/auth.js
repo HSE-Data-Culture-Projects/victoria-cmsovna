@@ -1,4 +1,6 @@
-// Функция проверки токена на истечение
+// ======================
+// Утилита проверки токена
+// ======================
 function isTokenExpired(token) {
     if (!token) return true;
 
@@ -16,24 +18,24 @@ function isTokenExpired(token) {
         const currentTime = Date.now() / 1000; // текущее время в секундах
         return payload.exp < currentTime;      // если exp меньше текущего времени — токен просрочен
     } catch (err) {
-        // Если что-то пошло не так при декодировании — считаем токен просроченным
+        // Любая ошибка парсинга = считаем токен просроченным
         return true;
     }
 }
 
-// 1) Сразу при загрузке скрипта проверяем, не истёк ли токен.
-// Если токен валиден, перенаправляем на главную страницу.
-(function checkTokenOnLoad() {
+// ======================
+// Логика для auth.html
+// ======================
+document.addEventListener('DOMContentLoaded', function() {
+    // 1) Сначала проверяем, не залогинен ли пользователь уже (валидный токен?)
     const token = localStorage.getItem('token');
     if (token && !isTokenExpired(token)) {
+        console.log('[auth.js] Токен уже есть и он валиден → редирект на index.html');
         window.location.href = 'index.html';
+        return;
     }
-})();
 
-// 2) Логика отправки формы для логина
-// js/auth.js
-// Убедитесь, что этот скрипт подключается после js/config.js
-document.addEventListener('DOMContentLoaded', () => {
+    // 2) Если токена нет / истёк, показываем форму авторизации
     const form = document.getElementById('loginForm');
     const errorMessage = document.getElementById('error-message');
 
@@ -44,7 +46,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const password = document.getElementById('password').value.trim();
 
         try {
-            const response = await fetch(`/api/auth/login`, {
+            // Отправляем запрос на бэкенд
+            const response = await fetch('/api/auth/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -52,20 +55,29 @@ document.addEventListener('DOMContentLoaded', () => {
                 body: JSON.stringify({ username, password }),
             });
 
+            // Если статус ответа не 2xx
             if (!response.ok) {
-                const data = await response.json();
+                const data = await response.json().catch(() => ({}));
                 throw new Error(data.message || 'Ошибка при авторизации');
             }
 
+            // Парсим JSON, ищем token
             const result = await response.json();
-            const { token } = result;
+            const { accessToken } = result;
+
+            if (!accessToken) {
+                throw new Error('Сервер не вернул поле "token".');
+            }
+
+            console.log('[auth.js] Получен токен от сервера:', accessToken);
 
             // Сохраняем токен в localStorage
-            localStorage.setItem('token', token);
+            localStorage.setItem('token', accessToken);
 
             // Перенаправляем на главную страницу
             window.location.href = 'index.html';
         } catch (error) {
+            console.error('[auth.js] Ошибка авторизации:', error);
             errorMessage.style.display = 'block';
             errorMessage.textContent = error.message;
         }
