@@ -3,13 +3,11 @@ FROM nginx:alpine
 # Копируем наш кастомный конфиг Nginx
 COPY default.conf /etc/nginx/conf.d/default.conf
 
-# Удаляем файлы по умолчанию из каталога раздачи
+# Удаляем дефолтные файлы Nginx
 RUN rm -rf /usr/share/nginx/html/*
 
-# Копируем содержимое папки views в корень раздачи
+# Копируем статические файлы
 COPY views/ /usr/share/nginx/html/
-
-# Копируем остальные каталоги (assets, css, js, data)
 COPY assets/ /usr/share/nginx/html/assets/
 COPY css/ /usr/share/nginx/html/css/
 COPY js/ /usr/share/nginx/html/js/
@@ -17,5 +15,5 @@ COPY data/ /usr/share/nginx/html/data/
 
 EXPOSE 80
 
-# Добавляем VOLUME, чтобы задать том в конфигурации образа
+# Добавляем том, если нужно (не обязательно)
 VOLUME ["/usr/share/nginx/html"]

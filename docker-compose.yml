@@ -6,3 +6,9 @@ services:
     restart: always
     ports:
       - "8080:80"
+    networks:
+      - my-network
+
+networks:
+  my-network:
+    external: true
