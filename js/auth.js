@@ -1,3 +1,4 @@
+import { API_BASE_URL } from './config.js';
 // Функция проверки токена на истечение
 function isTokenExpired(token) {
     if (!token) return true;
@@ -31,6 +32,8 @@ function isTokenExpired(token) {
 })();
 
 // 2) Логика отправки формы для логина
+// js/auth.js
+// Убедитесь, что этот скрипт подключается после js/config.js
 document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('loginForm');
     const errorMessage = document.getElementById('error-message');
@@ -42,8 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const password = document.getElementById('password').value.trim();
 
         try {
-            // Если у вас backend-метод на /login, замените '/api/login' на '/login'
-            const response = await fetch('http://localhost:3000/api/auth/login', {
+            const response = await fetch(`${window.API_BASE_URL}/api/auth/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -59,13 +61,12 @@ document.addEventListener('DOMContentLoaded', () => {
             const result = await response.json();
             const { token } = result;
 
-            // Сохраняем токен (или используйте sessionStorage/cookie по своей логике)
+            // Сохраняем токен в localStorage
             localStorage.setItem('token', token);
 
             // Перенаправляем на главную страницу
             window.location.href = 'index.html';
         } catch (error) {
-            // Выводим сообщение об ошибке
             errorMessage.style.display = 'block';
             errorMessage.textContent = error.message;
         }
