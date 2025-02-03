@@ -15,7 +15,7 @@ async function addTask() {
 
     try {
         const token = localStorage.getItem('token');
-        const response = await fetch(`${window.API_BASE_URL}/api/tasks`, {
+        const response = await fetch(`/api/tasks`, {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${token}`
@@ -36,7 +36,7 @@ async function addTask() {
 // Загрузка и отображение всех задач (включая файлы)
 async function loadTasks() {
     try {
-        const response = await fetch(`${window.API_BASE_URL}api/tasks`);
+        const response = await fetch(`/api/tasks`);
         const tasks = await response.json();
 
         const taskList = document.getElementById('task-list');
@@ -63,7 +63,7 @@ async function loadTasks() {
                 downloadButton.textContent = 'Скачать';
                 downloadButton.addEventListener('click', () => {
                     const link = document.createElement('a');
-                    link.href = `${window.API_BASE_URL}/uploads/${task.filename}`;
+                    link.href = `/uploads/${task.filename}`;
                     link.download = task.originalname;
                     link.click();
                 });
@@ -120,7 +120,7 @@ async function updateTask(id) {
 
     try {
         const token = localStorage.getItem('token');
-        const response = await fetch(`${window.API_BASE_URL}/api/tasks/${id}`, {
+        const response = await fetch(`/api/tasks/${id}`, {
             method: 'PATCH',
             headers: {
                 'Authorization': `Bearer ${token}`
@@ -143,7 +143,7 @@ async function deleteTask(id) {
     if (confirm('Вы уверены, что хотите удалить это задание?')) {
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`${window.API_BASE_URL}/api/tasks/${id}`, {
+            const response = await fetch(`/api/tasks/${id}`, {
                 method: 'DELETE',
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -183,7 +183,7 @@ function cancelTaskForm() {
 // Загрузка списка тем для выбора при создании/обновлении задачи
 async function loadTopicsForTasks() {
     try {
-        const response = await fetch('${window.API_BASE_URL}/api/topics');
+        const response = await fetch('/api/topics');
         if (response.ok) {
             const topics = await response.json();
             const topicSelect = document.getElementById('topic-ids');

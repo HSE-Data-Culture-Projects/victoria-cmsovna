@@ -94,7 +94,7 @@ async function deleteExam(id) {
 // Обновление функции loadExams для добавления кнопки удаления
 async function loadExams() {
     try {
-        const response = await fetch(`${window.API_BASE_URL}/api/exams`);
+        const response = await fetch(`/api/exams`);
         const exams = await response.json();
 
         const examList = document.getElementById('exam-list');

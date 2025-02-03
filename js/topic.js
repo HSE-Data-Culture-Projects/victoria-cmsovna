@@ -2,7 +2,7 @@
 
 async function loadExamsForTopics() {
     try {
-        const response = await fetch(`${window.API_BASE_URL}/api/exams`);
+        const response = await fetch(`/api/exams`);
         if (response.ok) {
             const exams = await response.json();
             const examSelect = document.getElementById('exam-ids');
@@ -24,7 +24,7 @@ async function loadExamsForTopics() {
 async function patchTopic(topicId, topicName, examIds) {
     try {
         const token = localStorage.getItem('token');
-        const response = await fetch(`${window.API_BASE_URL}/api/topics/${topicId}`, {
+        const response = await fetch(`/api/topics/${topicId}`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
@@ -80,7 +80,7 @@ function cancelTopicForm() {
 async function addTopic(topicName, examIds) {
     try {
         const token = localStorage.getItem('token');
-        const response = await fetch(`${window.API_BASE_URL}/api/topics`, {
+        const response = await fetch(`/api/topics`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -100,7 +100,7 @@ async function addTopic(topicName, examIds) {
 }
 async function updateTopic(id) {
     try {
-        const response = await fetch(`${window.API_BASE_URL}api/topics/${id}`);
+        const response = await fetch(`/api/topics/${id}`);
         if (response.ok) {
             const topic = await response.json();
 
@@ -132,7 +132,7 @@ async function updateTopic(id) {
 async function deleteTopic(id) {
     try {
         const token = localStorage.getItem('token');
-        const response = await fetch(`${window.API_BASE_URL}/api/topics/${id}`, {
+        const response = await fetch(`/api/topics/${id}`, {
             method: 'DELETE',
             headers: {
                 'Authorization': `Bearer ${token}`
@@ -153,7 +153,7 @@ async function loadTopics() {
     const urlParams = new URLSearchParams(window.location.search);
     const examId = urlParams.get('examId');
 
-    let url = `${window.API_BASE_URL}/api/topics`;
+    let url = `/api/topics`;
     if (examId) {
         url += `/${examId}`;
     }
