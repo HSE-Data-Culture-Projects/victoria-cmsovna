@@ -25,13 +25,13 @@ function loadPage() {
 function navigateTo(page) {
     switch(page) {
         case 'exams':
-            window.location.href = '../views/exams.html';
+            window.location.href = 'exams.html';
             break;
         case 'topics':
-            window.location.href = '../views/topics.html';
+            window.location.href = 'topics.html';
             break;
         case 'tasks':
-            window.location.href = '../views/tasks.html';
+            window.location.href = 'tasks.html';
             break;
         default:
             console.error('Неизвестная страница для навигации: ' + page);
