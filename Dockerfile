@@ -1,12 +1,18 @@
-# Используем официальный образ Nginx на базе Alpine Linux
 FROM nginx:alpine
 
-# Копируем все файлы CMS в директорию, которую Nginx использует для раздачи контента
-COPY . /usr/share/nginx/html
+# Копируем наш кастомный конфиг, чтобы переопределить дефолтный
+COPY default.conf /etc/nginx/conf.d/default.conf
 
-# (Опционально) Если вам нужно настроить дополнительные параметры Nginx, можно скопировать свой конфигурационный файл.
-# Например, если вы хотите использовать кастомный конфиг, создайте файл nginx.conf и добавьте:
-# COPY nginx.conf /etc/nginx/conf.d/default.conf
+# Удаляем все файлы по умолчанию, если они есть
+RUN rm -rf /usr/share/nginx/html/*
 
-# Образ по умолчанию уже слушает порт 80
+# Копируем содержимое папки views в корень раздачи
+COPY views/ /usr/share/nginx/html/
+
+# Также копируем остальные каталоги (assets, css, js, data)
+COPY assets/ /usr/share/nginx/html/assets/
+COPY css/ /usr/share/nginx/html/css/
+COPY js/ /usr/share/nginx/html/js/
+COPY data/ /usr/share/nginx/html/data/
+
 EXPOSE 80
