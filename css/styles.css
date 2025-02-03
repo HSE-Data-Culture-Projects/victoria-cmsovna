@@ -10,12 +10,11 @@
     --table-row-hover: #f1f1f1;
 }
 
-/* Универсальный box-sizing для лучшей адаптивности */
+/* Глобальные настройки */
 * {
     box-sizing: border-box;
 }
 
-/* Основные стили для всего приложения */
 body {
     font-family: 'Roboto', sans-serif;
     margin: 0;
@@ -23,6 +22,7 @@ body {
     background-color: var(--background-color);
 }
 
+/* Шапка */
 header {
     background-color: var(--primary-color);
     color: var(--text-color);
@@ -40,10 +40,9 @@ header {
     background-color: white;
     box-shadow: 0px 2px 4px var(--box-shadow-color);
     border-radius: var(--border-radius);
-    text-align: center;
 }
 
-/* Стили для страницы авторизации */
+/* Стили для страницы авторизации (не затрагивают остальные страницы) */
 [data-page="auth"] .container {
     max-width: 400px;
     text-align: left;
@@ -55,7 +54,7 @@ header {
     margin-bottom: 20px;
 }
 
-/* Поля ввода, textarea, select */
+/* Поля ввода, select, textarea */
 input,
 select,
 textarea {
@@ -67,7 +66,7 @@ textarea {
     font-size: 16px;
 }
 
-/* Группа полей (лейбл + инпут) */
+/* Группа полей (если используется) */
 .form-group {
     margin-bottom: 15px;
 }
@@ -78,7 +77,7 @@ textarea {
     font-weight: 500;
 }
 
-/* Стили кнопок */
+/* Основные стили кнопок */
 button {
     background-color: var(--primary-color);
     color: var(--text-color);
@@ -100,15 +99,15 @@ button:hover {
     background-color: var(--hover-color);
 }
 
-/* Кнопка удаления */
+/* Кнопка удаления (используется на экзаменах, темах, заданиях) */
 button.delete-button {
     background-color: #e53935;
-    color: white;
-    border: none;
+    color: var(--text-color);
     padding: 10px 15px;
+    border: none;
     cursor: pointer;
     border-radius: 50px;
-    display: flex;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
     font-size: 16px;
@@ -120,7 +119,7 @@ button.delete-button:hover {
     background-color: #b71c1c;
 }
 
-/* Кнопка «Войти» на странице авторизации во всю ширину */
+/* Кнопка «Войти» на странице авторизации */
 [data-page="auth"] .container button.main-button {
     width: 100%;
     margin-right: 0;
@@ -140,7 +139,7 @@ a:hover {
     text-decoration: underline;
 }
 
-/* Стили для таблиц */
+/* Таблицы (если используются) */
 table {
     width: 100%;
     border-collapse: collapse;
@@ -161,31 +160,6 @@ td {
 
 th {
     background-color: var(--table-header-bg);
-}
-
-table th {
-    padding: 10px;
-    border-bottom: 2px solid #ddd;
-    font-weight: bold;
-}
-
-table td {
-    padding: 10px;
-    border-bottom: 1px solid #ddd;
-}
-
-/* Кнопки действий в таблицах */
-table td .action-button {
-    background-color: var(--primary-color);
-    color: white;
-    padding: 8px 12px;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-table td .action-button:hover {
-    background-color: var(--hover-color);
 }
 
 /* Модальные окна */
@@ -224,16 +198,136 @@ table td .action-button:hover {
     cursor: pointer;
 }
 
-/* Пустое состояние */
-li p {
-    font-size: 14px;
-    color: #888;
+/* ============================= */
+/* Стили для страниц экзаменов  */
+/* ============================= */
+
+/* Список экзаменов */
+#exam-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#exam-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px;
+    border-bottom: 1px solid #dee2e6;
+    flex-wrap: wrap;
+}
+
+/* Контейнер для кнопок в элементах экзаменов */
+.exam-button-container {
+    display: flex;
+    gap: 10px;
+}
+
+/* ============================= */
+/* Стили для страниц тем и заданий */
+/* ============================= */
+
+/* Общие стили списков (для тем и заданий, кроме экзаменов) */
+ul:not(#exam-list) {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+ul:not(#exam-list) li {
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+}
+
+ul:not(#exam-list) li:last-child {
+    border-bottom: none;
+}
+
+/* Контейнеры для кнопок внутри элементов тем и заданий */
+.topics-button-container,
+.tasks-button-container {
+    display: flex;
+    gap: 10px;
     margin-top: 10px;
 }
 
-/* Дополнительные и специфичные стили */
+/* ============================= */
+/* Форма добавления/редактирования (общая) */
+/* ============================= */
 
-/* Заголовок страницы редактирования/управления (например, экзаменов) */
+.form-container {
+    margin-top: 20px;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: var(--border-radius);
+    background-color: #f9f9f9;
+}
+
+.form-container form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.form-container label {
+    font-weight: 500;
+}
+
+/* Поля ввода, textarea, select, файловый ввод внутри форм */
+.form-container input[type="text"],
+.form-container textarea,
+.form-container select,
+.form-container input[type="file"] {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* Настройка для textarea (например, для XML-содержимого задания) */
+.form-container textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+/* Для элементов select с множественным выбором */
+.form-container select {
+    height: auto;
+}
+
+/* Кнопки внутри форм */
+.form-container button {
+    background-color: var(--primary-color);
+    color: var(--text-color);
+    border: none;
+    padding: 10px 20px;
+    border-radius: var(--border-radius);
+    font-size: 16px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: background-color 0.3s ease;
+}
+
+.form-container button:hover {
+    background-color: var(--hover-color);
+}
+
+/* Если в форме несколько кнопок рядом */
+.form-container form>div {
+    display: flex;
+    gap: 10px;
+}
+
+/* ============================= */
+/* Стили для шапок страниц (редактирование) */
+/* ============================= */
 .edit-page-header {
     display: flex;
     justify-content: space-between;
@@ -242,7 +336,11 @@ li p {
     margin-bottom: 20px;
 }
 
-/* Кнопка добавления экзамена */
+.edit-page-header h2 {
+    margin: 0;
+}
+
+/* Кнопка добавления (общая для экзаменов, тем, заданий) */
 .add-button {
     background-color: var(--primary-color);
     color: var(--text-color);
@@ -265,38 +363,9 @@ li p {
     margin-right: 8px;
 }
 
-/* Стили для списка экзаменов */
-#exam-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-#exam-list li {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 12px;
-    border-bottom: 1px solid #ddd;
-    flex-wrap: wrap;
-}
-
-/* Контейнер для кнопок в элементах списка экзаменов */
-.exam-button-container {
-    display: flex;
-    gap: 10px;
-}
-
-/* Стили для формы добавления/редактирования экзамена */
-.form-container {
-    margin-top: 20px;
-    padding: 20px;
-    border: 1px solid #ddd;
-    border-radius: var(--border-radius);
-    background-color: #f9f9f9;
-}
-
-/* Адаптивные стили */
+/* ============================= */
+/* Адаптивность */
+/* ============================= */
 @media (max-width: 768px) {
     .edit-page-header {
         flex-direction: column;
@@ -304,20 +373,18 @@ li p {
         gap: 10px;
     }
 
+    .topics-button-container,
+    .tasks-button-container {
+        flex-direction: column;
+    }
+
+    ul:not(#exam-list) li {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
     #exam-list li {
         flex-direction: column;
         align-items: flex-start;
-        gap: 10px;
     }
-
-    .exam-button-container {
-        flex-direction: column;
-        width: 100%;
-    }
-}
-
-/* Дополнительный класс для основной кнопки (если требуется) */
-.main-button {
-    background-color: blueviolet;
-    /* остальное наследует стили от button */
 }
