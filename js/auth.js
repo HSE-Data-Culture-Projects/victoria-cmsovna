@@ -1,4 +1,3 @@
-import { API_BASE_URL } from './config.js';
 // Функция проверки токена на истечение
 function isTokenExpired(token) {
     if (!token) return true;
