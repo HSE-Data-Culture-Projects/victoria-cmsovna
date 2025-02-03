@@ -6,8 +6,11 @@ COPY default.conf /etc/nginx/conf.d/default.conf
 # Удаляем все файлы по умолчанию, если они есть
 RUN rm -rf /usr/share/nginx/html/*
 
-# Копируем содержимое папки views в корень раздачи
-COPY views/ /usr/share/nginx/html/
+# Создаем папку views в корне раздачи
+RUN mkdir -p /usr/share/nginx/html/views
+
+# Копируем содержимое папки views в папку views внутри раздачи
+COPY views/ /usr/share/nginx/html/views/
 
 # Также копируем остальные каталоги (assets, css, js, data)
 COPY assets/ /usr/share/nginx/html/assets/
