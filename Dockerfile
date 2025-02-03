@@ -15,5 +15,5 @@ COPY data/ /usr/share/nginx/html/data/
 
 EXPOSE 80
 
-# Добавляем том, если нужно (не обязательно)
-VOLUME ["/usr/share/nginx/html"]
+# # Добавляем том, если нужно (не обязательно)
+# VOLUME ["/usr/share/nginx/html"]
