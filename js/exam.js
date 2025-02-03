@@ -30,7 +30,7 @@ function cancelForm() {
 async function addExam(examName) {
     try {
         const token = localStorage.getItem('token');
-        const response = await fetch('http://localhost:3000/api/exams', {
+        const response = await fetch('/api/exams', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -52,7 +52,7 @@ async function addExam(examName) {
 async function updateExam(id, examName) {
     try {
         const token = localStorage.getItem('token');
-        const response = await fetch(`http://localhost:3000/api/exams/${id}`, {
+        const response = await fetch(`/api/exams/${id}`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
@@ -74,7 +74,7 @@ async function updateExam(id, examName) {
 async function deleteExam(id) {
     try {
         const token = localStorage.getItem('token');
-        const response = await fetch(`http://localhost:3000/api/exams/${id}`, {
+        const response = await fetch(`/api/exams/${id}`, {
             method: 'DELETE',
             headers: {
                 'Authorization': `Bearer ${token}`
