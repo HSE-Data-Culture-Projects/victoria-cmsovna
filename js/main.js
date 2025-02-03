@@ -55,6 +55,10 @@ function loadPage() {
 
 function navigateTo(page) {
     switch (page) {
+        case 'index':
+        case '':
+            window.location.href = 'index.html';
+            break;
         case 'exams':
             window.location.href = 'exams.html';
             break;
