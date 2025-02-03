@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html lang="en" data-page="index">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Главная страница CMS</title>
     <link rel="stylesheet" href="../css/styles.css">
+    <base href="/" />
+    <script src="../js/config.js"></script>
 </head>
-
 <body>
-    <script src="./../js/header_component.js"></script>
+    <script src="../js/header_component.js"></script>
     <header-component></header-component>
     <div class="container">
         <h2>Добро пожаловать в CMS Data Culture!</h2>
@@ -23,10 +23,8 @@
             <button class="main-button" onclick="navigateTo('tasks')">
                 <img src="../assets/svg/edit.svg" alt="Задания" class="icon"> Управление заданиями
             </button>
-
         </div>
     </div>
     <script src="../js/main.js"></script>
 </body>
-
 </html>

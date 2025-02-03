@@ -153,7 +153,7 @@ async function loadTopics() {
     const urlParams = new URLSearchParams(window.location.search);
     const examId = urlParams.get('examId');
 
-    let url = `${window.API_BASE_URL}api/topics`;
+    let url = `${window.API_BASE_URL}/api/topics`;
     if (examId) {
         url += `/${examId}`;
     }

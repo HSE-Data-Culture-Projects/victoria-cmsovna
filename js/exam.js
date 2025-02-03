@@ -1,50 +1,6 @@
-// js/exam.js
-async function loadExams() {
-    try {
-        const response = await fetch(`${window.API_BASE_URL}/api/exams`);
-        const exams = await response.json();
+// exam.js - Логика для работы с экзаменами
 
-        const examList = document.getElementById('exam-list');
-        examList.innerHTML = '';
-
-        exams.forEach(exam => {
-            const li = document.createElement('li');
-            li.textContent = exam.name;
-            li.setAttribute('data-id', exam.id);
-
-            const buttonContainer = document.createElement('div');
-            buttonContainer.classList.add('exam-button-container');
-
-            const editButton = document.createElement('button');
-            editButton.textContent = 'Изменить';
-            editButton.style.marginLeft = '10px';
-            editButton.addEventListener('click', (event) => {
-                event.stopPropagation();
-                showForm(exam.id, exam.name);
-            });
-
-            const deleteButton = document.createElement('button');
-            deleteButton.textContent = 'Удалить';
-            deleteButton.classList.add('delete-button');
-            deleteButton.style.marginLeft = '10px';
-            deleteButton.addEventListener('click', (event) => {
-                event.stopPropagation();
-                if (confirm('Вы уверены, что хотите удалить этот экзамен?')) {
-                    deleteExam(exam.id);
-                }
-            });
-
-            buttonContainer.appendChild(editButton);
-            buttonContainer.appendChild(deleteButton);
-            li.appendChild(buttonContainer);
-            examList.appendChild(li);
-        });
-    } catch (error) {
-        console.error('Ошибка при загрузке экзаменов:', error);
-    }
-}
-
-document.getElementById('exam-form').addEventListener('submit', async function(event) {
+document.getElementById('exam-form').addEventListener('submit', async function (event) {
     event.preventDefault();
     const examName = document.getElementById('exam-name').value;
     const examId = document.getElementById('exam-id').value;
@@ -67,10 +23,14 @@ function hideForm() {
     document.getElementById('exam-form-container').style.display = 'none';
 }
 
+function cancelForm() {
+    hideForm();
+}
+
 async function addExam(examName) {
     try {
         const token = localStorage.getItem('token');
-        const response = await fetch(`${window.API_BASE_URL}/api/exams`, {
+        const response = await fetch('http://localhost:3000/api/exams', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -78,6 +38,7 @@ async function addExam(examName) {
             },
             body: JSON.stringify({ name: examName })
         });
+
         if (response.ok) {
             loadExams();
         } else {
@@ -91,7 +52,7 @@ async function addExam(examName) {
 async function updateExam(id, examName) {
     try {
         const token = localStorage.getItem('token');
-        const response = await fetch(`${window.API_BASE_URL}/api/exams/${id}`, {
+        const response = await fetch(`http://localhost:3000/api/exams/${id}`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
@@ -99,6 +60,7 @@ async function updateExam(id, examName) {
             },
             body: JSON.stringify({ name: examName })
         });
+
         if (response.ok) {
             loadExams();
         } else {
@@ -112,12 +74,13 @@ async function updateExam(id, examName) {
 async function deleteExam(id) {
     try {
         const token = localStorage.getItem('token');
-        const response = await fetch(`${window.API_BASE_URL}/api/exams/${id}`, {
+        const response = await fetch(`http://localhost:3000/api/exams/${id}`, {
             method: 'DELETE',
             headers: {
                 'Authorization': `Bearer ${token}`
             }
         });
+
         if (response.ok) {
             loadExams();
         } else {
@@ -128,6 +91,63 @@ async function deleteExam(id) {
     }
 }
 
+// Обновление функции loadExams для добавления кнопки удаления
+async function loadExams() {
+    try {
+        const response = await fetch(`${window.API_BASE_URL}/api/exams`);
+        const exams = await response.json();
+
+        const examList = document.getElementById('exam-list');
+        examList.innerHTML = '';
+
+        exams.forEach(exam => {
+            const li = document.createElement('li');
+            li.textContent = exam.name;
+            li.setAttribute('data-id', exam.id);
+
+            // Создаем контейнер для кнопок
+            const buttonContainer = document.createElement('div');
+            buttonContainer.classList.add('exam-button-container');
+
+            // Создаем кнопку "Изменить"
+            const editButton = document.createElement('button');
+            editButton.textContent = 'Изменить';
+            editButton.style.marginLeft = '10px';
+            editButton.addEventListener('click', (event) => {
+                event.stopPropagation();
+                showForm(exam.id, exam.name);
+            });
+
+            // Создаем кнопку "Удалить"
+            const deleteButton = document.createElement('button');
+            deleteButton.textContent = 'Удалить';
+            deleteButton.classList.add('delete-button');
+            deleteButton.style.marginLeft = '10px';
+            deleteButton.addEventListener('click', (event) => {
+                event.stopPropagation();
+                if (confirm('Вы уверены, что хотите удалить этот экзамен?')) {
+                    deleteExam(exam.id);
+                }
+            });
+
+            // Добавляем кнопки в контейнер
+            buttonContainer.appendChild(editButton);
+            buttonContainer.appendChild(deleteButton);
+
+            // Добавляем контейнер с кнопками в элемент списка
+            li.appendChild(buttonContainer);
+
+            // Добавляем элемент списка в список экзаменов
+            examList.appendChild(li);
+
+        });
+    } catch (error) {
+        console.error('Ошибка при загрузке экзаменов:', error);
+    }
+}
+
+
+// Пример вызова showForm для добавления экзамена
 document.querySelector('.add-button').addEventListener('click', function () {
     showForm();
 });
