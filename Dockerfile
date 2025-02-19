@@ -17,3 +17,4 @@ EXPOSE 80
 
 # # Добавляем том, если нужно (не обязательно)
 # VOLUME ["/usr/share/nginx/html"]
+CMD ["nginx", "-g", "daemon off;"]
