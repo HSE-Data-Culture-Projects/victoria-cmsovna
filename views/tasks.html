@@ -22,8 +22,9 @@
             <!-- Список заданий будет динамически загружен сюда -->
         </ul>
         <br>
+
+        <!-- Форма для создания/редактирования отдельного задания -->
         <div class="form-container" id="task-form-container" style="display: none;">
-            <!-- Форма для создания/редактирования задачи -->
             <form id="task-form" enctype="multipart/form-data">
                 <label for="task-content">Содержимое задания (XML):</label>
                 <textarea id="task-content" name="task-content" required></textarea>
@@ -39,6 +40,16 @@
                 <input type="hidden" id="task-id" name="task-id">
                 <button type="submit">Сохранить</button>
                 <button type="button" onclick="cancelTaskForm()">Отмена</button>
+            </form>
+        </div>
+
+        <!-- Форма для множественной загрузки XML файлов -->
+        <div class="form-container" id="multi-import-form-container">
+            <h3>Множественная загрузка XML</h3>
+            <form id="multi-import-form" enctype="multipart/form-data">
+                <label for="multi-files">Выберите XML файлы:</label>
+                <input type="file" id="multi-files" name="files" multiple accept=".xml">
+                <button type="submit">Импортировать файлы</button>
             </form>
         </div>
     </div>

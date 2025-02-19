@@ -1,6 +1,6 @@
 // task.js - Логика для работы с заданиями
 
-// Добавляем задачу с возможностью загрузки файла
+// Функция для добавления одного задания (существующий функционал)
 async function addTask() {
     const taskContent = document.getElementById('task-content').value;
     const topicIds = Array.from(document.getElementById('topic-ids').selectedOptions).map(option => option.value);
@@ -33,7 +33,7 @@ async function addTask() {
     }
 }
 
-// Загрузка и отображение всех задач (включая файлы)
+// Функция для загрузки и отображения всех заданий (существующий функционал)
 async function loadTasks() {
     try {
         const response = await fetch(`/api/tasks`);
@@ -71,7 +71,7 @@ async function loadTasks() {
                 li.appendChild(downloadButton);
             }
 
-            // Создаем контейнер для кнопок "Изменить" и "Удалить"
+            // Контейнер для кнопок "Изменить" и "Удалить"
             const buttonContainer = document.createElement('div');
             buttonContainer.classList.add('tasks-button-container');
 
@@ -83,29 +83,24 @@ async function loadTasks() {
                 loadTopicsForTasks();
                 showTaskForm(task.id, task.content, task.topicIds);
             });
-            buttonContainer.appendChild(editButton); // Добавляем кнопку в контейнер
+            buttonContainer.appendChild(editButton);
 
             // Кнопка удаления
             const deleteButton = document.createElement('button');
             deleteButton.textContent = 'Удалить';
             deleteButton.classList.add('delete-button');
             deleteButton.addEventListener('click', () => deleteTask(task.id));
-            buttonContainer.appendChild(deleteButton); // Добавляем кнопку в контейнер
+            buttonContainer.appendChild(deleteButton);
 
-            // Добавляем контейнер с кнопками в элемент списка
             li.appendChild(buttonContainer);
-
-            // Добавляем элемент списка в список задач
             taskList.appendChild(li);
-
         });
     } catch (error) {
         console.error('Ошибка при загрузке заданий:', error);
     }
 }
 
-
-// Обновление задачи с возможностью загрузки нового файла
+// Функция для обновления задания (существующий функционал)
 async function updateTask(id) {
     const taskContent = document.getElementById('task-content').value;
     const topicIds = Array.from(document.getElementById('topic-ids').selectedOptions).map(option => option.value);
@@ -138,7 +133,7 @@ async function updateTask(id) {
     }
 }
 
-// Удаление задачи и связанного с ней файла
+// Функция для удаления задания (существующий функционал)
 async function deleteTask(id) {
     if (confirm('Вы уверены, что хотите удалить это задание?')) {
         try {
@@ -161,7 +156,7 @@ async function deleteTask(id) {
     }
 }
 
-// Показ формы для добавления или изменения задачи
+// Функция для показа формы редактирования/добавления задания (существующий функционал)
 function showTaskForm(taskId = '', taskContent = '', topicIds = []) {
     document.getElementById('task-content').value = taskContent;
     const topicSelect = document.getElementById('topic-ids');
@@ -170,24 +165,22 @@ function showTaskForm(taskId = '', taskContent = '', topicIds = []) {
     document.getElementById('task-form-container').style.display = 'block';
 }
 
-// Скрытие формы
 function hideTaskForm() {
     document.getElementById('task-form-container').style.display = 'none';
 }
 
-// Отмена формы
 function cancelTaskForm() {
     hideTaskForm();
 }
 
-// Загрузка списка тем для выбора при создании/обновлении задачи
+// Загрузка списка тем для формы (существующий функционал)
 async function loadTopicsForTasks() {
     try {
         const response = await fetch('/api/topics');
         if (response.ok) {
             const topics = await response.json();
             const topicSelect = document.getElementById('topic-ids');
-            topicSelect.innerHTML = ''; // Очистка текущих опций
+            topicSelect.innerHTML = '';
             topics.forEach(topic => {
                 const option = document.createElement('option');
                 option.value = topic.id;
@@ -202,7 +195,43 @@ async function loadTopicsForTasks() {
     }
 }
 
-// Обработчик формы создания/обновления задания
+// Новая функция для множественной загрузки XML файлов
+async function importMultipleTasks() {
+    const filesInput = document.getElementById('multi-files');
+    if (filesInput.files.length === 0) {
+        alert('Выберите хотя бы один XML файл для импорта.');
+        return;
+    }
+    const formData = new FormData();
+    // Добавляем все выбранные файлы в FormData
+    for (let i = 0; i < filesInput.files.length; i++) {
+        formData.append('files', filesInput.files[i]);
+    }
+
+    try {
+        const token = localStorage.getItem('token');
+        const response = await fetch('/api/tasks/import-multiple', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            },
+            body: formData
+        });
+
+        const result = await response.json();
+        if (response.ok) {
+            alert(`Импортировано: ${result.message}`);
+            loadTasks();
+        } else {
+            alert(`Ошибка импорта: ${result.error || JSON.stringify(result)}`);
+        }
+    } catch (error) {
+        console.error('Ошибка импорта множественных файлов:', error);
+        alert('Ошибка импорта файлов');
+    }
+}
+
+// Обработчик формы создания/редактирования задания (существующий функционал)
 document.getElementById('task-form').addEventListener('submit', async function (event) {
     event.preventDefault();
     const taskId = document.getElementById('task-id').value;
@@ -215,10 +244,17 @@ document.getElementById('task-form').addEventListener('submit', async function (
     hideTaskForm();
 });
 
-// Вызов функции для загрузки тем при открытии формы
+// Обработчик формы для множественной загрузки XML файлов
+document.getElementById('multi-import-form').addEventListener('submit', function (event) {
+    event.preventDefault();
+    importMultipleTasks();
+});
+
+// Загрузка тем при нажатии на кнопку "Добавить задание"
 document.querySelector('.add-button').addEventListener('click', function () {
     loadTopicsForTasks();
     showTaskForm();
 });
 
+// Загрузка заданий при загрузке страницы
 document.addEventListener('DOMContentLoaded', loadTasks);
