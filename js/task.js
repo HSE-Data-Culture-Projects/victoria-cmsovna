@@ -1,5 +1,3 @@
-// task.js - Логика для работы с заданиями
-
 // Функция для добавления одного задания (существующий функционал)
 async function addTask() {
     const taskContent = document.getElementById('task-content').value;
@@ -80,7 +78,7 @@ async function loadTasks() {
             editButton.textContent = 'Изменить';
             editButton.classList.add('edit-button');
             editButton.addEventListener('click', () => {
-                loadTopicsForTasks();
+                loadTopics(); // обновляем список тем для формы редактирования
                 showTaskForm(task.id, task.content, task.topicIds);
             });
             buttonContainer.appendChild(editButton);
@@ -173,40 +171,51 @@ function cancelTaskForm() {
     hideTaskForm();
 }
 
-// Загрузка списка тем для формы (существующий функционал)
-async function loadTopicsForTasks() {
+// Функция для загрузки списка тем для формы импорта XML файлов
+async function loadTopicsForImport() {
     try {
         const response = await fetch('/api/topics');
         if (response.ok) {
             const topics = await response.json();
-            const topicSelect = document.getElementById('topic-ids');
-            topicSelect.innerHTML = '';
+            const importTopicSelect = document.getElementById('import-topic');
+            importTopicSelect.innerHTML = '<option value="">Выберите тему</option>';
             topics.forEach(topic => {
                 const option = document.createElement('option');
                 option.value = topic.id;
                 option.textContent = topic.name;
-                topicSelect.appendChild(option);
+                importTopicSelect.appendChild(option);
             });
         } else {
-            console.error('Ошибка при загрузке тем');
+            console.error('Ошибка при загрузке тем для импорта');
         }
     } catch (error) {
-        console.error('Ошибка при загрузке тем:', error);
+        console.error('Ошибка при загрузке тем для импорта:', error);
     }
 }
 
-// Новая функция для импорта XML файлов через новую ручку /api/tasks/import-xml
+// Функция для импорта XML файлов через ручку /api/tasks/import-xml.
+// При импорте передается выбранная тема, к которой будут прикреплены все импортированные вопросы.
 async function importXmlQuestions() {
     const filesInput = document.getElementById('multi-files');
+    const importTopicSelect = document.getElementById('import-topic');
+
     if (filesInput.files.length === 0) {
         alert('Выберите хотя бы один XML файл для импорта.');
         return;
     }
+
+    if (!importTopicSelect.value) {
+        alert('Выберите тему для импорта.');
+        return;
+    }
+
     const formData = new FormData();
     // Добавляем все выбранные файлы в FormData
     for (let i = 0; i < filesInput.files.length; i++) {
         formData.append('files', filesInput.files[i]);
     }
+    // Добавляем выбранную тему (как строку)
+    formData.append('topicIds', JSON.stringify([importTopicSelect.value]));
 
     try {
         const token = localStorage.getItem('token');
@@ -231,30 +240,20 @@ async function importXmlQuestions() {
     }
 }
 
-// Обработчик формы создания/редактирования задания (существующий функционал)
-document.getElementById('task-form').addEventListener('submit', async function (event) {
-    event.preventDefault();
-    const taskId = document.getElementById('task-id').value;
-
-    if (taskId) {
-        await updateTask(taskId);
-    } else {
-        await addTask();
-    }
-    hideTaskForm();
-});
-
-// Обработчик формы для множественной загрузки XML файлов (новая реализация)
+// Обработчик формы для множественной загрузки XML файлов
 document.getElementById('multi-import-form').addEventListener('submit', function (event) {
     event.preventDefault();
     importXmlQuestions();
 });
 
-// Загрузка тем при нажатии на кнопку "Добавить задание"
+// Загрузка тем для формы создания/редактирования задания при нажатии на кнопку "Добавить задание"
 document.querySelector('.add-button').addEventListener('click', function () {
-    loadTopicsForTasks();
+    loadTopics();
     showTaskForm();
 });
 
-// Загрузка заданий при загрузке страницы
-document.addEventListener('DOMContentLoaded', loadTasks);
+// Загрузка тем для формы импорта и списка заданий сразу при загрузке страницы
+document.addEventListener('DOMContentLoaded', function () {
+    loadTopicsForImport();
+    loadTasks();
+});
