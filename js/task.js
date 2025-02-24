@@ -195,8 +195,8 @@ async function loadTopicsForTasks() {
     }
 }
 
-// Новая функция для множественной загрузки XML файлов
-async function importMultipleTasks() {
+// Новая функция для импорта XML файлов через новую ручку /api/tasks/import-xml
+async function importXmlQuestions() {
     const filesInput = document.getElementById('multi-files');
     if (filesInput.files.length === 0) {
         alert('Выберите хотя бы один XML файл для импорта.');
@@ -210,7 +210,7 @@ async function importMultipleTasks() {
 
     try {
         const token = localStorage.getItem('token');
-        const response = await fetch('/api/tasks/import-multiple', {
+        const response = await fetch('/api/tasks/import-xml', {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${token}`
@@ -226,7 +226,7 @@ async function importMultipleTasks() {
             alert(`Ошибка импорта: ${result.error || JSON.stringify(result)}`);
         }
     } catch (error) {
-        console.error('Ошибка импорта множественных файлов:', error);
+        console.error('Ошибка импорта XML файлов:', error);
         alert('Ошибка импорта файлов');
     }
 }
@@ -244,10 +244,10 @@ document.getElementById('task-form').addEventListener('submit', async function (
     hideTaskForm();
 });
 
-// Обработчик формы для множественной загрузки XML файлов
+// Обработчик формы для множественной загрузки XML файлов (новая реализация)
 document.getElementById('multi-import-form').addEventListener('submit', function (event) {
     event.preventDefault();
-    importMultipleTasks();
+    importXmlQuestions();
 });
 
 // Загрузка тем при нажатии на кнопку "Добавить задание"
