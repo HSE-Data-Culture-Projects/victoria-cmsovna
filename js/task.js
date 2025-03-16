@@ -31,7 +31,7 @@ async function addTask() {
     }
 }
 
-// Функция для загрузки и отображения всех заданий (существующий функционал)
+// Функция для загрузки и отображения всех заданий (обновлённый функционал)
 async function loadTasks() {
     try {
         const response = await fetch(`/api/tasks`);
@@ -42,7 +42,40 @@ async function loadTasks() {
 
         tasks.forEach(task => {
             const li = document.createElement('li');
-            li.textContent = task.content;
+
+            // Парсим XML, чтобы извлечь название и текст вопроса
+            try {
+                const parser = new DOMParser();
+                const xmlDoc = parser.parseFromString(task.content, "text/xml");
+                const nameElement = xmlDoc.querySelector("name > text");
+                const questionTextElement = xmlDoc.querySelector("questiontext > text");
+
+                if (nameElement && questionTextElement) {
+                    // Вывод названия вопроса
+                    const nameContainer = document.createElement('p');
+                    nameContainer.textContent = "Название: " + nameElement.textContent;
+                    li.appendChild(nameContainer);
+
+                    // Вывод текста вопроса
+                    const textContainer = document.createElement('div');
+                    const questionTextLabel = document.createElement('p');
+                    questionTextLabel.textContent = "Текст вопроса:";
+                    textContainer.appendChild(questionTextLabel);
+
+                    // Вставляем HTML содержимое текста вопроса
+                    const questionTextContent = document.createElement('div');
+                    questionTextContent.innerHTML = questionTextElement.innerHTML;
+                    textContainer.appendChild(questionTextContent);
+
+                    li.appendChild(textContainer);
+                } else {
+                    // Если структура не соответствует, выводим оригинальное содержимое
+                    li.textContent = task.content;
+                }
+            } catch (e) {
+                console.error("Ошибка парсинга XML:", e);
+                li.textContent = task.content;
+            }
 
             // Отображаем привязанные темы
             if (task.topics && task.topics.length > 0) {
@@ -194,7 +227,6 @@ async function loadTopicsForImport() {
 }
 
 // Функция для импорта XML файлов через ручку /api/tasks/import-xml.
-// При импорте передается выбранная тема, к которой будут прикреплены все импортированные вопросы.
 async function importXmlQuestions() {
     const filesInput = document.getElementById('multi-files');
     const importTopicSelect = document.getElementById('import-topic');
@@ -210,11 +242,9 @@ async function importXmlQuestions() {
     }
 
     const formData = new FormData();
-    // Добавляем все выбранные файлы в FormData
     for (let i = 0; i < filesInput.files.length; i++) {
         formData.append('files', filesInput.files[i]);
     }
-    // Добавляем выбранную тему (как строку)
     formData.append('topicIds', JSON.stringify([importTopicSelect.value]));
 
     try {
