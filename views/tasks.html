@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-page="tasks">
+<html lang="ru" data-page="tasks">
 
 <head>
     <meta charset="UTF-8">
@@ -11,33 +11,33 @@
 <body>
     <script src="../js/header_component.js"></script>
     <header-component></header-component>
+
     <div class="container">
         <div class="edit-page-header">
             <h2>Задания</h2>
             <button class="add-button" onclick="showTaskForm()">
-                <img src="../assets/svg/add_circle.svg" alt="Добавить" class="icon"> Добавить задание
+                <img src="../assets/svg/add_circle.svg" alt="Добавить" class="icon">
+                Добавить задание
             </button>
         </div>
-        <!-- Форма для множественной загрузки XML файлов -->
+
         <div class="form-container" id="multi-import-form-container">
             <h3>Множественная загрузка XML</h3>
+
             <form id="multi-import-form" enctype="multipart/form-data">
-                <label for="multi-files">Выберите XML файлы:</label>
+                <label for="multi-files">Выберите XML‑файлы:</label>
                 <input type="file" id="multi-files" name="files" multiple accept=".xml">
 
                 <label for="import-topic">Выберите тему для импорта:</label>
-                <select id="import-topic" name="import-topic" required>
-                    <!-- Опции будут динамически загружены сюда -->
-                </select>
+                <select id="import-topic" name="import-topic" required></select>
 
                 <button type="submit">Импортировать файлы</button>
             </form>
         </div>
-        <ul id="task-list">
-            <!-- Список заданий будет динамически загружен сюда -->
-        </ul>
-        <br>
 
+        <br>
+        <div id="topic-list"></div>
+        <br>
     </div>
 
     <script src="../js/main.js"></script>

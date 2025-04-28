@@ -387,4 +387,55 @@ ul:not(#exam-list) li:last-child {
         flex-direction: column;
         align-items: flex-start;
     }
+
+    details {
+        border: 1px solid #ddd;
+        border-radius: 0.5rem;
+        margin-bottom: 0.75rem;
+        overflow: hidden;
+    }
+
+    summary {
+        cursor: pointer;
+        padding: 0.75rem 1rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        list-style: none;
+        /* убираем маркёр */
+    }
+
+    summary::marker {
+        display: none;
+    }
+
+    /* Safari */
+
+    summary::after {
+        /* свой индикатор раскрытия */
+        content: "▶";
+        margin-left: auto;
+        transition: transform 0.2s ease;
+    }
+
+    details[open] summary::after {
+        transform: rotate(90deg);
+    }
+
+    /* список заданий внутри темы */
+    .task-ul {
+        list-style: none;
+        margin: 0;
+        padding: 0 1rem 1rem;
+    }
+
+    .task-ul>li {
+        border-bottom: 1px solid #eee;
+        padding: 0.75rem 0;
+    }
+
+    .task-ul>li:last-child {
+        border-bottom: none;
+    }
 }
