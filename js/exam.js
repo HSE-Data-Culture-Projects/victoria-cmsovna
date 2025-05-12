@@ -1,5 +1,3 @@
-// exam.js - Логика для работы с экзаменами
-
 document.getElementById('exam-form').addEventListener('submit', async function (event) {
     event.preventDefault();
     const examName = document.getElementById('exam-name').value;
@@ -91,7 +89,6 @@ async function deleteExam(id) {
     }
 }
 
-// Обновление функции loadExams для добавления кнопки удаления
 async function loadExams() {
     try {
         const response = await fetch(`/api/exams`);
@@ -130,14 +127,11 @@ async function loadExams() {
                 }
             });
 
-            // Добавляем кнопки в контейнер
             buttonContainer.appendChild(editButton);
             buttonContainer.appendChild(deleteButton);
 
-            // Добавляем контейнер с кнопками в элемент списка
             li.appendChild(buttonContainer);
 
-            // Добавляем элемент списка в список экзаменов
             examList.appendChild(li);
 
         });
@@ -147,7 +141,6 @@ async function loadExams() {
 }
 
 
-// Пример вызова showForm для добавления экзамена
 document.querySelector('.add-button').addEventListener('click', function () {
     showForm();
 });

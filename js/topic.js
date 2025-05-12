@@ -1,5 +1,3 @@
-// topic.js - Логика для работы с темами
-
 async function loadExamsForTopics() {
     try {
         const response = await fetch(`/api/exams`);
@@ -25,7 +23,7 @@ async function patchTopic(topicId, topicName, examIds) {
     try {
         const token = localStorage.getItem('token');
         const response = await fetch(`/api/topics/${topicId}`, {
-            method: 'PATCH',
+            method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
@@ -104,20 +102,17 @@ async function updateTopic(id) {
         if (response.ok) {
             const topic = await response.json();
 
-            // Загружаем список экзаменов для формы редактирования
             await loadExamsForTopics();
 
-            // Устанавливаем выбранные экзамены для темы
             const examIds = topic.exams ? topic.exams.map(exam => exam.id) : [];
             const examSelect = document.getElementById('exam-ids');
 
             Array.from(examSelect.options).forEach(option => {
                 if (examIds.includes(option.value)) {
-                    option.selected = true; // Отмечаем выбранные экзамены
+                    option.selected = true;
                 }
             });
 
-            // Открываем форму с заполненными данными
             showTopicForm(topic.id, topic.name, examIds.join(','));
         } else {
             console.error('Ошибка при загрузке данных темы');
@@ -170,27 +165,23 @@ async function loadTopics() {
                 const li = document.createElement('li');
                 li.textContent = topic.name;
 
-                // Отображаем привязанные экзамены, если они есть
                 if (topic.exams && topic.exams.length > 0) {
-                    const examList = document.createElement('ul'); // Подсписок для экзаменов
+                    const examList = document.createElement('ul');
                     topic.exams.forEach(exam => {
                         const examLi = document.createElement('li');
-                        examLi.textContent = exam.name; // Отображаем имя экзамена
+                        examLi.textContent = exam.name;
                         examList.appendChild(examLi);
                     });
                     li.appendChild(examList);
                 } else {
-                    // Если нет экзаменов, отображаем сообщение
                     const noExams = document.createElement('p');
                     noExams.textContent = 'Нет привязанных экзаменов';
                     li.appendChild(noExams);
                 }
 
-                // Создаем контейнер для кнопок
                 const buttonContainer = document.createElement('div');
                 buttonContainer.classList.add('topics-button-container');
 
-                // Кнопка редактирования
                 const editButton = document.createElement('button');
                 editButton.textContent = 'Изменить';
                 editButton.style.marginLeft = '10px';
@@ -199,7 +190,6 @@ async function loadTopics() {
                     updateTopic(topic.id);
                 });
 
-                // Кнопка удаления
                 const deleteButton = document.createElement('button');
                 deleteButton.classList.add('delete-button');
                 deleteButton.textContent = 'Удалить';
@@ -211,14 +201,11 @@ async function loadTopics() {
                     }
                 });
 
-                // Добавляем кнопки в контейнер
                 buttonContainer.appendChild(editButton);
                 buttonContainer.appendChild(deleteButton);
 
-                // Добавляем контейнер с кнопками в элемент списка
                 li.appendChild(buttonContainer);
 
-                // Добавляем элемент списка в список тем
                 topicList.appendChild(li);
 
             });
@@ -230,8 +217,6 @@ async function loadTopics() {
     }
 }
 
-
-// Пример вызова showTopicForm для добавления темы
 document.querySelector('.add-button').addEventListener('click', function () {
     loadExamsForTopics();
     showTopicForm();

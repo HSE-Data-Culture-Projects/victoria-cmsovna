@@ -21,5 +21,4 @@ class HeaderComponent extends HTMLElement {
     }
 }
 
-// Регистрируем кастомный элемент
 customElements.define('header-component', HeaderComponent);
