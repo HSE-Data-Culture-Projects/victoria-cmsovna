@@ -19,21 +19,33 @@
 
         <div class="form-container" id="multi-import-form-container">
             <h3>Загрузка заданий</h3>
-
             <form id="multi-import-form" enctype="multipart/form-data">
                 <label for="multi-files">Выберите XML-файлы</label>
                 <input type="file" id="multi-files" name="files" multiple accept=".xml">
-
                 <label for="import-topic">Выберите тему:</label>
                 <select id="import-topic" name="import-topic" required></select>
-
                 <button type="submit">Импортировать файлы</button>
             </form>
         </div>
 
-        <br>
         <div id="topic-list"></div>
-        <br>
+    </div>
+
+    <div id="task-form-container" class="modal" style="display:none">
+        <div class="modal-content">
+            <h3 id="task-form-title">Новое задание</h3>
+            <form id="task-form">
+                <input type="hidden" id="task-id">
+                <label for="task-content">Содержимое задания</label>
+                <textarea id="task-content" rows="8" required></textarea>
+                <label for="topic-ids">Темы</label>
+                <select id="topic-ids" multiple required></select>
+                <div class="modal-buttons">
+                    <button type="submit" id="task-save-btn">Сохранить</button>
+                    <button type="button" id="task-cancel-btn">Отмена</button>
+                </div>
+            </form>
+        </div>
     </div>
 
     <script src="../js/main.js"></script>
